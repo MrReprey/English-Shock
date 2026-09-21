@@ -1,0 +1,152 @@
+const gameData = {
+  verbos: {
+    "presente-simple": {
+      title: "Verbos en forma base",
+
+      instruction: "Escribe en inglés los siguientes verbos:",
+
+      questions: [
+        {word: "Correr", answers: ["run"],},
+        {word: "Comer", answers: ["eat"],},
+        {word: "Beber", answers: ["drink"],},
+        {word: "Escribir", answers: ["write"],},
+        {word: "Ir", answers: ["go"],},
+        {word: "Hablar", answers: ["speak", "talk"],},
+        {word: "Dormir", answers: ["sleep"],},
+        {word: "Estudiar", answers: ["study"],},
+        {word: "Jugar", answers: ["play"],},
+        {word: "Caminar", answers: ["walk"],},
+        {word: "Nadar", answers: ["swim"],},
+        {word: "Responder", answers: ["answer"],},
+        {word: "Preguntar", answers: ["ask"],},
+        {word: "Amar", answers: ["love"],},
+        {word: "Gustar", answers: ["like"],},
+        {word: "Cerrar", answers: ["close"],},
+        {word: "Tocar (Instrumentos)", answers: ["play"],},
+        {word: "Ser/Estar", answers: ["be"],},
+        {word: "Hacer", answers: ["do"],},
+        {word: "Romper", answers: ["break"],},
+        {word: "Traer", answers: ["bring"],},
+        {word: "Limpiar", answers: ["clean"],},
+        {word: "Comprar", answers: ["buy"],},
+        {word: "Cocinar", answers: ["cook"],},
+        {word: "Aprender", answers: ["learn"],},
+        {word: "Saber", answers: ["know"],},
+       
+      ],
+    },
+
+    "pasado-simple": {
+      title: "Verbos en pasado simple",
+
+      instruction: "Escribe en inglés el pasado de los siguientes verbos:",
+
+      questions: [
+        {word: "Run", answers: ["ran"],},
+        {word: "Eat", answers: ["ate"],},
+        {word: "Drink", answers: ["drank"],},
+        {word: "Write", answers: ["wrote"],},
+        {word: "Go", answers: ["went"],},
+        {word: "Speak", answers: ["spoke"],},
+        {word: "Sleep", answers: ["slept"],},
+        {word: "Study", answers: ["studied"],},
+        {word: "Play", answers: ["played"],},
+        {word: "Walk", answers: ["walked"],},
+        {word: "Swim", answers: ["swam"],},
+        {word: "Answer", answers: ["answered"],},
+        {word: "Ask", answers: ["asked"],},
+        {word: "Talk", answers: ["talked"],},
+        {word: "Love", answers: ["loved"],},
+        {word: "Like", answers: ["liked"],},
+        {word: "Book", answers: ["booked"],},
+        {word: "Get", answers: ["got"],},
+        {word: "Do", answers: ["did"],},
+        {word: "Be (Singular)", answers: ["was"],},
+        {word: "Be (Plural)", answers: ["were"],},
+        {word: "Clean", answers: ["cleaned"],},
+        {word: "Buy", answers: ["bought"],},
+        {word: "Cook", answers: ["cooked"],},
+        {word: "Learn", answers: ["learned"],},
+        {word: "Know", answers: ["knew"],},
+      ],
+    },
+  },
+
+  vocabulario: {
+    "animales": {
+      title: "Animales en ingles",
+
+      instruction: "Escribe en inglés los siguientes animales: ",
+
+      questions: [
+        {word: "Leon", answers: ["lion"],},
+        {word: "Perro", answers: ["dog"],},
+        {word: "Gato", answers: ["cat"],},
+        {word: "Hormiga", answers: ["ant"],},
+        {word: "Mono", answers: ["monkey"],},
+        {word: "Serpiente", answers: ["snake"],},
+        {word: "Oso", answers: ["bear"],},
+        {word: "Abeja", answers: ["bee"],},
+        {word: "Caballo", answers: ["horse"],},
+        {word: "Oveja", answers: ["sheep"],},
+        {word: "Cerdo", answers: ["pig"],},
+        {word: "Pollo", answers: ["chicken"],},
+        {word: "Vaca", answers: ["cow"],},
+        {word: "Cabra", answers: ["goat"],},
+        {word: "Araña", answers: ["spider"],},
+        {word: "Pajaro", answers: ["bird"],},
+        {word: "Tortuga", answers: ["turtle"],},
+        {word: "Elefante", answers: ["elephant"],},
+        {word: "Raton", answers: ["mouse"],},
+        {word: "Tigre", answers: ["tiger"],},
+        {word: "Conejo", answers: ["rabbit"],},
+        {word: "Lagarto", answers: ["aligator"],},
+        {word: "Pato", answers: ["duck"],},
+        {word: "Pinguino", answers: ["penguin"],},
+        {word: "Pez", answers: ["fish"],},
+        {word: "Lobo", answers: ["wolf"],},
+      ],
+    },
+    
+    "frutas-verduras": {
+      title: "Frutas y Verduras en ingles",
+
+      instruction: "Escribe en inglés las siguientes frutas y verduras: ",
+
+      questions: [
+        {word: "Manzana", answers: ["apple"],},
+        {word: "Pera", answers: ["pear"],},
+        {word: "Sandia", answers: ["watermelon"],},
+        {word: "Uvas", answers: ["grapes"],},
+        {word: "Lechuga", answers: ["lettuce"],},
+        {word: "Tomate", answers: ["tomato"],},
+        {word: "Papa", answers: ["potato"],},
+        {word: "Naranja", answers: ["Orange"],},
+        {word: "Rabano", answers: ["Radish"],},
+        {word: "Pimenton", answers: ["pepper"],},
+        {word: "Zanahoria", answers: ["carrot"],},
+        {word: "Cebolla", answers: ["onion"],},
+        {word: "Ajo", answers: ["garlic"],},
+        {word: "Limon", answers: ["lemon"],},
+        {word: "Cereza", answers: ["cherry"],},
+        {word: "Fresa", answers: ["strawberry"],},
+        {word: "Piña", answers: ["pineapple"],},
+        {word: "Aguacate", answers: ["avocado"],},
+        {word: "Coco", answers: ["coconut"],},
+        {word: "Champiñon", answers: ["mushroom"],},
+        {word: "Calabaza", answers: ["pumpkin"],},
+        {word: "Pepinillo", answers: ["pickle"],},
+        {word: "Choclo", answers: ["corn"],},
+        {word: "Jengibre", answers: ["ginger"],},
+        {word: "Apio", answers: ["celery"],},
+        {word: "Guisante", answers: ["pea"],},
+      ],
+    },
+  },
+
+  oraciones: {
+    // Aquí estarán saludos, preguntas, conversaciones, etc.
+  },
+};
+
+export default gameData;
