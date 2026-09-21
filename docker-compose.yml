@@ -1,0 +1,64 @@
+services:
+  database:
+    image: mysql:8.4
+    container_name: english-shock-database
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: english_shock
+      MYSQL_USER: english_shock
+      MYSQL_PASSWORD: english_shock_password
+      MYSQL_ROOT_PASSWORD: root_password
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot_password"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+    container_name: english-shock-backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env.docker
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: database
+      DB_PORT: 3306
+      DB_DATABASE: english_shock
+      DB_USERNAME: english_shock
+      DB_PASSWORD: english_shock_password
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/var/www/html
+      - ./backend/.env.docker:/var/www/html/.env:ro
+      - backend_vendor:/var/www/html/vendor
+    depends_on:
+      database:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: english-shock-frontend
+    restart: unless-stopped
+    environment:
+      VITE_API_URL: http://localhost:8000
+      CHOKIDAR_USEPOLLING: "true"
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:
+  backend_vendor:
+  frontend_node_modules:
