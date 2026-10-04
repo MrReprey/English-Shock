@@ -1,21 +1,25 @@
 import { useState } from "react";
+
+import { useAuth } from "../context/AuthContext";
+
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import LearningOption from "../Components/LearningOption";
-import Leaderboard from "./LeaderBoard";
 import { createPlayer } from "../services/api";
 import "./css/Home.css";
 
 function Home() {
   const [openOption, setOpenOption] = useState(null);
   const navigate = useNavigate();
-  const [playerName, setPlayerName] = useState("");
   const [playerImage, setPlayerImage] = useState(null);
   
   /*Funciones de la API */
   const [playerImageFile, setPlayerImageFile] = useState(null);
   const [isStarting, setIsStarting] = useState(false);
   const [apiError, setApiError] = useState("");
+
+  //Autenticacion 
+  const { user } = useAuth();
 
   function toggleOption(option) {
     if (openOption === option) {
@@ -30,7 +34,7 @@ function Home() {
       setApiError("");
 
       const player = await createPlayer(
-        playerName,
+        user.name,
         playerImageFile
       );
 
@@ -55,7 +59,7 @@ function Home() {
       setApiError("");
 
       const player = await createPlayer(
-        playerName,
+        user.name,
         playerImageFile
       );
 
@@ -76,9 +80,7 @@ function Home() {
   }
   return (
     <div className="home-page">
-      <Navbar 
-        name={playerName}
-        setName={setPlayerName}
+      <Navbar
         image={playerImage}
         setImage={setPlayerImage}
         setImageFile={setPlayerImageFile}

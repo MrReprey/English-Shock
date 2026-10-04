@@ -1,24 +1,41 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { useAuth } from "../context/AuthContext";
 import "./css/Navbar.css";
 
 function Navbar({
-  name,
-  setName,
   image,
   setImage,
   setImageFile,
-}) 
- {
+}) {
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
+
+  const [loggingOut, setLoggingOut] =
+    useState(false);
+
   function selectImage(event) {
-  const file = event.target.files[0];
+    const file = event.target.files[0];
 
-  if (file) {
-    const temporaryUrl =
-      URL.createObjectURL(file);
+    if (file) {
+      const temporaryUrl =
+        URL.createObjectURL(file);
 
-    setImage(temporaryUrl);
-    setImageFile(file);
+      setImage(temporaryUrl);
+      setImageFile(file);
+    }
   }
-}
+
+  async function handleLogout() {
+    try {
+      setLoggingOut(true);
+      await logout();
+      navigate("/login", { replace: true });
+    } finally {
+      setLoggingOut(false);
+    }
+  }
 
   return (
     <header className="navbar">
@@ -27,23 +44,26 @@ function Navbar({
       </h2>
 
       <div className="profile">
-        <input
-          type="text"
-          placeholder="Escribe tu nombre"
-          value={name}
-          onChange={(event) =>
-            setName(event.target.value)
-          }
-        />
+        <div className="profile-user">
+          <strong>{user?.name}</strong>
+          <span>{user?.email}</span>
+        </div>
 
-        <label className="profile-image">
+        <label
+          className="profile-image"
+          title="Seleccionar imagen"
+        >
           {image ? (
             <img
               src={image}
               alt="Perfil del jugador"
             />
           ) : (
-            <span>+</span>
+            <span>
+              {user?.name
+                ?.charAt(0)
+                .toUpperCase() || "+"}
+            </span>
           )}
 
           <input
@@ -53,6 +73,17 @@ function Navbar({
             hidden
           />
         </label>
+
+        <button
+          type="button"
+          className="logout-button"
+          onClick={handleLogout}
+          disabled={loggingOut}
+        >
+          {loggingOut
+            ? "Saliendo..."
+            : "Cerrar sesión"}
+        </button>
       </div>
     </header>
   );
