@@ -25,17 +25,17 @@ Route::middleware('auth:sanctum')->group(function () {
         '/logout',
         [AuthController::class, 'logout']
     );
+
+    Route::post(
+        '/players',
+        [PlayerController::class, 'store']
+    );
+
+    Route::post(
+        '/scores',
+        [ScoreController::class, 'store']
+    );
 });
-
-Route::post(
-    '/players',
-    [PlayerController::class, 'store']
-);
-
-Route::post(
-    '/scores',
-    [ScoreController::class, 'store']
-);
 
 Route::get(
     '/leaderboard',

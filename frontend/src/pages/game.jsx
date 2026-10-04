@@ -135,7 +135,6 @@ function Game() {
       setSaveError("");
 
       await saveScore({
-        player_id: playerId,
         game_type: type,
         category,
         correct_answers:

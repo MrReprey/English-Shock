@@ -1,7 +1,20 @@
 export const BACKEND_URL =
-  import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+  import.meta.env.VITE_API_URL ||
+  "http://127.0.0.1:8000";
 
 export const API_URL = `${BACKEND_URL}/api`;
+
+const TOKEN_KEY = "english_shock_token";
+
+function getAuthHeaders() {
+  const token = localStorage.getItem(TOKEN_KEY);
+
+  return token
+    ? {
+        Authorization: `Bearer ${token}`,
+      }
+    : {};
+}
 
 export async function createPlayer(
   playerName,
@@ -25,6 +38,7 @@ export async function createPlayer(
 
       headers: {
         Accept: "application/json",
+        ...getAuthHeaders(),
       },
 
       body: formData,
@@ -36,14 +50,9 @@ export async function createPlayer(
   if (!response.ok) {
     throw new Error(
       data.message ||
-      "No se pudo registrar al jugador"
+        "No se pudo registrar al jugador"
     );
   }
-
-  /*
-   * Laravel devuelve /storage/avatars/...
-   * Necesitamos convertirlo en una URL completa.
-   */
 
   if (data.player.avatar_url) {
     data.player.avatar_url =
@@ -52,6 +61,7 @@ export async function createPlayer(
 
   return data.player;
 }
+
 export async function saveScore(gameResult) {
   const response = await fetch(
     `${API_URL}/scores`,
@@ -61,6 +71,7 @@ export async function saveScore(gameResult) {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        ...getAuthHeaders(),
       },
 
       body: JSON.stringify(gameResult),
@@ -72,13 +83,17 @@ export async function saveScore(gameResult) {
   if (!response.ok) {
     throw new Error(
       data.message ||
-      "No se pudo guardar el resultado"
+        "No se pudo guardar el resultado"
     );
   }
 
   return data.score;
 }
-export async function getLeaderboard(gameType, category) {
+
+export async function getLeaderboard(
+  gameType,
+  category
+) {
   const params = new URLSearchParams();
 
   if (gameType) {
@@ -92,6 +107,8 @@ export async function getLeaderboard(gameType, category) {
   const response = await fetch(
     `${API_URL}/leaderboard?${params.toString()}`,
     {
+      cache: "no-store",
+
       headers: {
         Accept: "application/json",
       },
@@ -102,7 +119,8 @@ export async function getLeaderboard(gameType, category) {
 
   if (!response.ok) {
     throw new Error(
-      data.message || "No se pudo cargar la tabla de posiciones"
+      data.message ||
+        "No se pudo cargar la tabla de posiciones"
     );
   }
 

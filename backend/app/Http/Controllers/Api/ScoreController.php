@@ -13,12 +13,6 @@ class ScoreController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'player_id' => [
-                'required',
-                'integer',
-                'exists:players,id',
-            ],
-
             'game_type' => [
                 'required',
                 'string',
@@ -53,7 +47,18 @@ class ScoreController extends Controller
             ],
         ]);
 
-        $score = Score::create($validated);
+        $player = $request->user()->player;
+
+        if (!$player) {
+            return response()->json([
+                'message' =>
+                    'El usuario todavía no tiene un perfil de jugador.',
+            ], 422);
+        }
+
+        $score = $player
+            ->scores()
+            ->create($validated);
 
         return response()->json([
             'message' => 'Resultado guardado correctamente',
