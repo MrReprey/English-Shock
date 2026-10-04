@@ -126,3 +126,32 @@ export async function getLeaderboard(
 
   return data.leaderboard ?? data;
 }
+export async function getProfile() {
+  const response = await fetch(
+    `${API_URL}/profile`,
+    {
+      cache: "no-store",
+
+      headers: {
+        Accept: "application/json",
+        ...getAuthHeaders(),
+      },
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      data.message ||
+        "No se pudo cargar el perfil"
+    );
+  }
+
+  if (data.player?.avatar_url) {
+    data.player.avatar_url =
+      `${BACKEND_URL}${data.player.avatar_url}`;
+  }
+
+  return data;
+}

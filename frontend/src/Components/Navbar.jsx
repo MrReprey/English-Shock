@@ -73,6 +73,13 @@ function Navbar({
             hidden
           />
         </label>
+        <button
+          type="button"
+          className="open-profile-button"
+          onClick={() => navigate("/perfil")}
+        >
+          Mi perfil
+        </button>
 
         <button
           type="button"
