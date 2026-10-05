@@ -12,6 +12,9 @@ function Navbar({
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
+  const displayedImage =
+  image || user?.avatar_url;
+
   const [loggingOut, setLoggingOut] =
     useState(false);
 
@@ -53,9 +56,9 @@ function Navbar({
           className="profile-image"
           title="Seleccionar imagen"
         >
-          {image ? (
+          {displayedImage ? (
             <img
-              src={image}
+              src={displayedImage}
               alt="Perfil del jugador"
             />
           ) : (
@@ -65,13 +68,6 @@ function Navbar({
                 .toUpperCase() || "+"}
             </span>
           )}
-
-          <input
-            type="file"
-            accept="image/*"
-            onChange={selectImage}
-            hidden
-          />
         </label>
         <button
           type="button"

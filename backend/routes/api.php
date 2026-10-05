@@ -28,6 +28,11 @@ Route::middleware('auth:sanctum')->group(function () {
     );
 
     Route::post(
+        '/profile',
+        [ProfileController::class, 'update']
+    );
+
+    Route::post(
         '/logout',
         [AuthController::class, 'logout']
     );

@@ -19,4 +19,4 @@ RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
 EXPOSE 8000
 
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+CMD ["sh", "-c", "php artisan storage:link || true; exec php artisan serve --host=0.0.0.0 --port=8000"]

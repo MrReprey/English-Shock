@@ -75,6 +75,11 @@ export function AuthProvider({ children }) {
     setUser(null);
   }
 
+
+  function updateCurrentUser(updatedUser) {
+    setUser(updatedUser);
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -83,6 +88,7 @@ export function AuthProvider({ children }) {
         register,
         login,
         logout,
+        updateCurrentUser,
         isAuthenticated: Boolean(user),
       }}
     >

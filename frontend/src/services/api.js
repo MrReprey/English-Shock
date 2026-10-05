@@ -155,3 +155,48 @@ export async function getProfile() {
 
   return data;
 }
+
+export async function updateProfile({
+  name,
+  email,
+  avatarFile,
+}) {
+  const formData = new FormData();
+
+  formData.append("name", name.trim());
+  formData.append("email", email.trim());
+
+  if (avatarFile) {
+    formData.append("avatar", avatarFile);
+  }
+
+  const response = await fetch(
+    `${API_URL}/profile`,
+    {
+      method: "POST",
+
+      headers: {
+        Accept: "application/json",
+        ...getAuthHeaders(),
+      },
+
+      body: formData,
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      data.message ||
+        "No se pudo actualizar el perfil"
+    );
+  }
+
+  if (data.player?.avatar_url) {
+    data.player.avatar_url =
+      `${BACKEND_URL}${data.player.avatar_url}`;
+  }
+
+  return data;
+}

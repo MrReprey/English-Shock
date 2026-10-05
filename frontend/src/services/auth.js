@@ -1,6 +1,24 @@
-import { API_URL } from "./api";
+import {
+  API_URL,
+  BACKEND_URL,
+} from "./api";
 
 const TOKEN_KEY = "english_shock_token";
+
+function normalizeUser(user) {
+  if (
+    user?.avatar_url &&
+    !user.avatar_url.startsWith("http")
+  ) {
+    return {
+      ...user,
+      avatar_url:
+        `${BACKEND_URL}${user.avatar_url}`,
+    };
+  }
+
+  return user;
+}
 
 function getErrorMessage(data, fallback) {
   if (data?.errors) {
@@ -46,7 +64,7 @@ export async function registerUser(formData) {
 
   saveToken(data.token);
 
-  return data.user;
+  return normalizeUser(data.user);
 }
 
 export async function loginUser(credentials) {
@@ -69,7 +87,7 @@ export async function loginUser(credentials) {
 
   saveToken(data.token);
 
-  return data.user;
+  return normalizeUser(data.user);
 }
 
 export async function getAuthenticatedUser() {
@@ -99,7 +117,7 @@ export async function getAuthenticatedUser() {
     );
   }
 
-  return data.user;
+  return normalizeUser(data.user);
 }
 
 export async function logoutUser() {

@@ -248,3 +248,160 @@
     grid-template-columns: 1fr;
   }
 }
+
+.profile-edit-button {
+  margin-left: auto;
+  padding: 11px 18px;
+
+  color: white;
+  font-weight: 700;
+
+  background:
+    linear-gradient(135deg, #ff806f, #e95f50);
+
+  border: none;
+  border-radius: 12px;
+
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.profile-edit-button:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 9px 20px rgba(233, 95, 80, 0.28);
+}
+
+.profile-edit-form {
+  margin-top: 28px;
+  padding: 25px;
+
+  background: #fff7f4;
+  border: 1px solid #f3c2b7;
+  border-radius: 18px;
+}
+
+.profile-edit-form h2 {
+  margin-bottom: 22px;
+
+  color: #493631;
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+
+.profile-edit-field {
+  margin-bottom: 18px;
+}
+
+.profile-edit-field label {
+  display: block;
+  margin-bottom: 7px;
+
+  color: #553a36;
+  font-weight: 700;
+}
+
+.profile-edit-field input {
+  width: 100%;
+  padding: 12px 14px;
+
+  color: #412d29;
+  background: white;
+
+  border: 1.5px solid #efb5a8;
+  border-radius: 11px;
+  outline: none;
+}
+
+.profile-edit-field input:focus {
+  border-color: #e96758;
+
+  box-shadow:
+    0 0 0 4px rgba(233, 103, 88, 0.14);
+}
+
+.profile-edit-field input[type="file"] {
+  cursor: pointer;
+}
+
+.profile-edit-field small {
+  display: block;
+  margin-top: 7px;
+  color: #85645e;
+}
+
+.profile-edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+
+  margin-top: 22px;
+}
+
+.profile-save-button,
+.profile-cancel-button {
+  padding: 11px 18px;
+
+  font-weight: 700;
+  border-radius: 11px;
+
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.profile-save-button {
+  color: white;
+  background: #e96758;
+  border: 1px solid #e96758;
+}
+
+.profile-save-button:hover:not(:disabled) {
+  background: #d95749;
+  transform: translateY(-1px);
+}
+
+.profile-cancel-button {
+  color: #75544e;
+  background: white;
+  border: 1px solid #dfb9b0;
+}
+
+.profile-cancel-button:hover:not(:disabled) {
+  background: #fce9e4;
+}
+
+.profile-save-button:disabled,
+.profile-cancel-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.profile-success {
+  margin-top: 24px;
+  padding: 13px;
+
+  color: #276846;
+  background: #e2f6e9;
+  border: 1px solid #9dd8b4;
+  border-radius: 11px;
+
+  text-align: center;
+  font-weight: 700;
+}
+
+@media (max-width: 600px) {
+  .profile-edit-button {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .profile-edit-actions {
+    flex-direction: column-reverse;
+  }
+
+  .profile-save-button,
+  .profile-cancel-button {
+    width: 100%;
+  }
+}
