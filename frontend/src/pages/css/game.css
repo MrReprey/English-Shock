@@ -736,3 +736,26 @@
   cursor: wait;
   opacity: 0.6;
 }
+.sentence-pieces {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+
+  margin: 24px 0 30px;
+}
+
+.sentence-piece {
+  padding: 11px 16px;
+
+  color: #553a36;
+  font-size: 1.05rem;
+  font-weight: 700;
+
+  background: #fff4f0;
+  border: 1px solid #f3b5a7;
+  border-radius: 12px;
+
+  box-shadow:
+    0 5px 12px rgba(195, 78, 62, 0.1);
+}

@@ -1,34 +1,39 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext";
-
-import { useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import LearningOption from "../Components/LearningOption";
 import { createPlayer } from "../services/api";
+
 import "./css/Home.css";
 
 function Home() {
-  const [openOption, setOpenOption] = useState(null);
   const navigate = useNavigate();
-  const [playerImage, setPlayerImage] = useState(null);
-  
-  /*Funciones de la API */
-  const [playerImageFile, setPlayerImageFile] = useState(null);
-  const [isStarting, setIsStarting] = useState(false);
-  const [apiError, setApiError] = useState("");
-
-  //Autenticacion 
   const { user } = useAuth();
 
+  const [openOption, setOpenOption] =
+    useState(null);
+
+  const [playerImage, setPlayerImage] =
+    useState(null);
+
+  const [playerImageFile, setPlayerImageFile] =
+    useState(null);
+
+  const [isStarting, setIsStarting] =
+    useState(false);
+
+  const [apiError, setApiError] =
+    useState("");
+
   function toggleOption(option) {
-    if (openOption === option) {
-      setOpenOption(null);
-    } else {
-      setOpenOption(option);
-    }
+    setOpenOption((currentOption) =>
+      currentOption === option ? null : option
+    );
   }
-  async function startVerbGame(category) {
+
+  async function startGame(type, category) {
     try {
       setIsStarting(true);
       setApiError("");
@@ -38,7 +43,7 @@ function Home() {
         playerImageFile
       );
 
-      navigate(`/juego/verbos/${category}`, {
+      navigate(`/juego/${type}/${category}`, {
         state: {
           playerId: player.id,
           playerName: player.name,
@@ -53,31 +58,7 @@ function Home() {
       setIsStarting(false);
     }
   }
-  async function startVocabGame(category) {
-    try {
-      setIsStarting(true);
-      setApiError("");
 
-      const player = await createPlayer(
-        user.name,
-        playerImageFile
-      );
-
-      navigate(`/juego/vocabulario/${category}`, {
-        state: {
-          playerId: player.id,
-          playerName: player.name,
-
-          playerImage:
-            player.avatar_url || playerImage,
-        },
-      });
-    } catch (error) {
-      setApiError(error.message);
-    } finally {
-      setIsStarting(false);
-    }
-  }
   return (
     <div className="home-page">
       <Navbar
@@ -88,14 +69,18 @@ function Home() {
 
       <main className="home-content">
         <section className="introduction">
-          <span className="small-title">APRENDE JUGANDO</span>
+          <span className="small-title">
+            APRENDE JUGANDO
+          </span>
 
           <h1>
-            ¿Qué quieres aprender <span>hoy?</span>
+            ¿Qué quieres aprender{" "}
+            <span>hoy?</span>
           </h1>
 
           <p>
-            Elige una categoría para comenzar a practicar inglés.
+            Elige una categoría para comenzar
+            a practicar inglés.
           </p>
         </section>
 
@@ -105,8 +90,12 @@ function Home() {
             title="Verbos"
             description="Aprende verbos regulares e irregulares."
             isOpen={openOption === "verbos"}
-            onToggle={() => toggleOption("verbos")}
-            onCategorySelect={startVerbGame}
+            onToggle={() =>
+              toggleOption("verbos")
+            }
+            onCategorySelect={(category) =>
+              startGame("verbos", category)
+            }
             categories={[
               {
                 id: "presente-simple",
@@ -123,9 +112,18 @@ function Home() {
             icon="📚"
             title="Vocabulario"
             description="Descubre nuevas palabras y significados."
-            isOpen={openOption === "vocabulario"}
-            onToggle={() => toggleOption("vocabulario")}
-            onCategorySelect={startVocabGame}
+            isOpen={
+              openOption === "vocabulario"
+            }
+            onToggle={() =>
+              toggleOption("vocabulario")
+            }
+            onCategorySelect={(category) =>
+              startGame(
+                "vocabulario",
+                category
+              )
+            }
             categories={[
               {
                 id: "animales",
@@ -133,7 +131,7 @@ function Home() {
               },
               {
                 id: "frutas-verduras",
-                label: "Frutas y Verduras",
+                label: "Frutas y verduras",
               },
             ]}
           />
@@ -141,17 +139,35 @@ function Home() {
           <LearningOption
             icon="💬"
             title="Oraciones"
-            description="Practica cómo construir oraciones."
-            isOpen={openOption === "oraciones"}
-            onToggle={() => toggleOption("oraciones")}
+            description="Ordena palabras y construye oraciones en inglés."
+            isOpen={
+              openOption === "oraciones"
+            }
+            onToggle={() =>
+              toggleOption("oraciones")
+            }
+            onCategorySelect={(category) =>
+              startGame(
+                "oraciones",
+                category
+              )
+            }
             categories={[
-              "Saludos y presentaciones",
-              "Rutina diaria",
-              "Preguntas",
-              "Viajes",
-              "Conversación",
+              {
+                id: "presente-simple",
+                label: "Presente simple",
+              },
+              {
+                id: "pasado-simple",
+                label: "Pasado simple",
+              },
+              {
+                id: "presente-continuo",
+                label: "Presente continuo",
+              },
             ]}
           />
+
           {isStarting && (
             <p className="starting-message">
               Preparando la partida...
