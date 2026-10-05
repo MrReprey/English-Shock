@@ -101,7 +101,10 @@ function Leaderboard() {
               const playerImage = getPlayerImage(score.player);
 
               return (
-                <div className="leaderboard-row" key={score.id}>
+                <div
+                  className="leaderboard-row"
+                  key={score.player.id}
+                >
                   <span className="position-number">
                     {index + 1}
                   </span>

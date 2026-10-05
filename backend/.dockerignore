@@ -4,3 +4,5 @@ vendor
 node_modules
 storage/logs/*
 .env.docker
+public/storage
+storage/app/public/avatars

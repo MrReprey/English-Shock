@@ -135,7 +135,6 @@ function Game() {
       setSaveError("");
 
       await saveScore({
-        player_id: playerId,
         game_type: type,
         category,
         correct_answers:
@@ -435,7 +434,23 @@ function Game() {
             {questions.length}
           </span>
 
-          <h2>{currentQuestion.word}</h2>
+          {type === "oraciones" ? (
+            <div className="sentence-pieces">
+              {currentQuestion.word
+                .split("/")
+                .map((piece) => piece.trim())
+                .map((piece, index) => (
+                  <span
+                    className="sentence-piece"
+                    key={`${piece}-${index}`}
+                  >
+                    {piece}
+                  </span>
+                ))}
+            </div>
+          ) : (
+            <h2>{currentQuestion.word}</h2>
+          )}
 
           <form
             className={`answer-form ${
@@ -446,7 +461,11 @@ function Game() {
             <input
                 ref={inputRef}
                 type="text"
-                placeholder="Escribe la respuesta en inglés"
+                placeholder={
+                  type === "oraciones"
+                    ? "Escribe la oración en el orden correcto"
+                    : "Escribe la respuesta en inglés"
+                }
                 value={userAnswer}
                 onChange={(event) => {
                     setUserAnswer(event.target.value);

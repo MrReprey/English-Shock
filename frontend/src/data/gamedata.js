@@ -145,7 +145,215 @@ const gameData = {
   },
 
   oraciones: {
-    // Aquí estarán saludos, preguntas, conversaciones, etc.
+    "presente-simple": {
+      title: "Oraciones en presente simple",
+
+      instruction:
+        "Ordena las palabras y escribe la oración correcta:",
+
+      questions: [
+        {
+          word: "every / English / I / day / study",
+          answers: ["I study English every day"],
+        },
+        {
+          word: "morning / coffee / every / drinks / She",
+          answers: ["She drinks coffee every morning"],
+        },
+        {
+          word: "school / soccer / after / They / play",
+          answers: ["They play soccer after school"],
+        },
+        {
+          word: "hospital / works / a / He / in",
+          answers: ["He works in a hospital"],
+        },
+        {
+          word: "Bolivia / live / We / in",
+          answers: ["We live in Bolivia"],
+        },
+        {
+          word: "night / television / watches / at / My brother",
+          answers: ["My brother watches television at night"],
+        },
+        {
+          word: "sofa / sleeps / The cat / on / the",
+          answers: ["The cat sleeps on the sofa"],
+        },
+        {
+          word: "well / English / very / speak / You",
+          answers: ["You speak English very well"],
+        },
+        {
+          word: "week / reads / every / Maria / a book",
+          answers: ["Maria reads a book every week"],
+        },
+        {
+          word: "eight / arrives / The bus / at",
+          answers: ["The bus arrives at eight"],
+        },
+        {
+          word: "together / dinner / cook / My parents",
+          answers: ["My parents cook dinner together"],
+        },
+        {
+          word: "chocolate / like / The children",
+          answers: ["The children like chocolate"],
+        },
+        {
+          word: "Sundays / his car / washes / He / on",
+          answers: ["He washes his car on Sundays"],
+        },
+        {
+          word: "afternoon / my homework / do / I / in the",
+          answers: ["I do my homework in the afternoon"],
+        },
+        {
+          word: "clearly / explains / The teacher / the lesson",
+          answers: ["The teacher explains the lesson clearly"],
+        },
+      ],
+    },
+
+    "pasado-simple": {
+      title: "Oraciones en pasado simple",
+
+      instruction:
+        "Ordena las palabras y escribe la oración correcta:",
+
+      questions: [
+        {
+          word: "yesterday / my grandmother / visited / I",
+          answers: ["I visited my grandmother yesterday"],
+        },
+        {
+          word: "last night / dinner / cooked / She",
+          answers: ["She cooked dinner last night"],
+        },
+        {
+          word: "after school / played / They / soccer",
+          answers: ["They played soccer after school"],
+        },
+        {
+          word: "on Saturday / a movie / watched / We",
+          answers: ["We watched a movie on Saturday"],
+        },
+        {
+          word: "the market / went / He / to",
+          answers: ["He went to the market"],
+        },
+        {
+          word: "the exam / studied / My brother / for",
+          answers: ["My brother studied for the exam"],
+        },
+        {
+          word: "under the table / slept / The dog",
+          answers: ["The dog slept under the table"],
+        },
+        {
+          word: "a new notebook / bought / I",
+          answers: ["I bought a new notebook"],
+        },
+        {
+          word: "a letter / wrote / Maria",
+          answers: ["Maria wrote a letter"],
+        },
+        {
+          word: "this morning / early / arrived / You",
+          answers: ["You arrived early this morning"],
+        },
+        {
+          word: "all the cake / ate / The children",
+          answers: ["The children ate all the cake"],
+        },
+        {
+          word: "to La Paz / traveled / My parents",
+          answers: ["My parents traveled to La Paz"],
+        },
+        {
+          word: "the lesson / explained / The teacher",
+          answers: ["The teacher explained the lesson"],
+        },
+        {
+          word: "a beautiful bird / saw / We",
+          answers: ["We saw a beautiful bird"],
+        },
+        {
+          word: "his bedroom / cleaned / He",
+          answers: ["He cleaned his bedroom"],
+        },
+      ],
+    },
+
+    "presente-continuo": {
+      title: "Oraciones en presente continuo",
+
+      instruction:
+        "Ordena las palabras y escribe la oración correcta:",
+
+      questions: [
+        {
+          word: "a book / reading / She / is",
+          answers: ["She is reading a book"],
+        },
+        {
+          word: "soccer / are / They / playing",
+          answers: ["They are playing soccer"],
+        },
+        {
+          word: "my homework / doing / am / I",
+          answers: ["I am doing my homework"],
+        },
+        {
+          word: "English / learning / are / We",
+          answers: ["We are learning English"],
+        },
+        {
+          word: "on the sofa / sleeping / is / The dog",
+          answers: ["The dog is sleeping on the sofa"],
+        },
+        {
+          word: "dinner / cooking / My mother / is",
+          answers: ["My mother is cooking dinner"],
+        },
+        {
+          word: "television / watching / is / He",
+          answers: ["He is watching television"],
+        },
+        {
+          word: "a blue shirt / wearing / are / You",
+          answers: ["You are wearing a blue shirt"],
+        },
+        {
+          word: "in the park / running / are / The children",
+          answers: ["The children are running in the park"],
+        },
+        {
+          word: "outside / raining / is / It",
+          answers: ["It is raining outside"],
+        },
+        {
+          word: "an email / writing / is / Maria",
+          answers: ["Maria is writing an email"],
+        },
+        {
+          word: "the lesson / explaining / is / The teacher",
+          answers: ["The teacher is explaining the lesson"],
+        },
+        {
+          word: "to music / listening / am / I",
+          answers: ["I am listening to music"],
+        },
+        {
+          word: "for the bus / waiting / are / My friends",
+          answers: ["My friends are waiting for the bus"],
+        },
+        {
+          word: "milk / drinking / is / The baby",
+          answers: ["The baby is drinking milk"],
+        },
+      ],
+    },
   },
 };
 

@@ -13,12 +13,6 @@ class PlayerController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'max:80',
-            ],
-
             'avatar' => [
                 'nullable',
                 'image',
@@ -27,21 +21,36 @@ class PlayerController extends Controller
             ],
         ]);
 
-        $avatarPath = null;
+        $user = $request->user();
+
+        $player = Player::firstOrNew([
+            'user_id' => $user->id,
+        ]);
+
+        $isNewPlayer = !$player->exists;
+        $avatarPath = $player->avatar;
 
         if ($request->hasFile('avatar')) {
+            if ($avatarPath) {
+                Storage::disk('public')->delete($avatarPath);
+            }
+
             $avatarPath = $request
                 ->file('avatar')
                 ->store('avatars', 'public');
         }
 
-        $player = Player::create([
-            'name' => $validated['name'],
+        $player->fill([
+            'name' => $user->name,
             'avatar' => $avatarPath,
         ]);
 
+        $player->save();
+
         return response()->json([
-            'message' => 'Jugador registrado correctamente',
+            'message' => $isNewPlayer
+                ? 'Jugador registrado correctamente'
+                : 'Perfil del jugador actualizado',
 
             'player' => [
                 'id' => $player->id,
@@ -51,6 +60,6 @@ class PlayerController extends Controller
                     ? Storage::url($player->avatar)
                     : null,
             ],
-        ], 201);
+        ], $isNewPlayer ? 201 : 200);
     }
 }
