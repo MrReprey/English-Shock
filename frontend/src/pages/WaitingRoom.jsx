@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useRef,
   useState,
 } from "react";
 
@@ -27,6 +28,10 @@ function WaitingRoom() {
   const location = useLocation();
 
   const { user } = useAuth();
+  const channelRef = useRef(null);
+
+  const [messages, setMessages] =
+    useState([]);
 
   const [room, setRoom] = useState(
     location.state?.room || null
@@ -119,6 +124,8 @@ function WaitingRoom() {
 
     const channel = echo.join(channelName);
 
+    channelRef.current = channel;
+
     channel.listen(
       ".multiplayer.game.updated",
       (event) => {
@@ -130,6 +137,37 @@ function WaitingRoom() {
         }
       }
     );
+
+    channel.listenForWhisper(
+  "chat",
+  (chatMessage) => {
+    if (
+      !chatMessage?.id ||
+      !chatMessage?.text
+    ) {
+      return;
+    }
+
+    setMessages((currentMessages) => {
+          const alreadyExists =
+            currentMessages.some(
+              (currentMessage) =>
+                currentMessage.id ===
+                chatMessage.id
+            );
+
+          if (alreadyExists) {
+            return currentMessages;
+          }
+
+          return [
+            ...currentMessages,
+            chatMessage,
+          ].slice(-50);
+        });
+      }
+    );
+
     channel
       .here((users) => {
         if (!active) {
@@ -191,9 +229,37 @@ function WaitingRoom() {
 
     return () => {
       active = false;
+      channelRef.current = null;
       echo.leave(channelName);
     };
   }, [code, navigate]);
+
+  function handleSendMessage(text) {
+  if (!channelRef.current) {
+    setNotice(
+      "El chat todavía se está conectando."
+    );
+
+    return;
+  }
+
+  const chatMessage = {
+    id: `${user.id}-${Date.now()}`,
+    userId: user.id,
+    name: user.name,
+    text: text.slice(0, 200),
+  };
+
+  setMessages((currentMessages) => [
+    ...currentMessages,
+    chatMessage,
+  ].slice(-50));
+
+  channelRef.current.whisper(
+    "chat",
+    chatMessage
+  );
+}
 
   async function copyRoomCode() {
     try {
@@ -266,10 +332,10 @@ function WaitingRoom() {
       sidebar={
         <RoomSidebar
           room={room}
-          connectedUserIds={
-            connectedUserIds
-          }
+          connectedUserIds={connectedUserIds}
           realtimeReady={realtimeReady}
+          messages={messages}
+          onSendMessage={handleSendMessage}
         />
       }
     >

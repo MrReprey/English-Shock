@@ -51,12 +51,14 @@ function JoinRoom() {
       const room =
         await joinMultiplayerRoom(roomCode);
 
-      navigate(
-        `/multiplayer/sala/${room.code}`,
-        {
-          state: { room },
-        }
-      );
+      const destination =
+        room.status === "waiting"
+          ? `/multiplayer/sala/${room.code}`
+          : `/multiplayer/juego/${room.code}`;
+
+      navigate(destination, {
+        state: { room },
+      });
     } catch (requestError) {
       setError(requestError.message);
     } finally {

@@ -15,7 +15,8 @@ WORKDIR /var/www/html
 
 COPY . .
 
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader
+RUN COMPOSER_PROCESS_TIMEOUT=2000 COMPOSER_MAX_PARALLEL_HTTP=4 composer install --no-interaction --prefer-dist --optimize-autoloader
+
 
 EXPOSE 8000
 

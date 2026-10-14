@@ -304,3 +304,266 @@
     width: 100%;
   }
 }
+.multiplayer-finished {
+  min-height: 620px;
+  padding: 55px 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 18px;
+
+  text-align: center;
+
+  background:
+    radial-gradient(
+      circle at top,
+      rgba(63, 190, 238, 0.18),
+      transparent 42%
+    ),
+    #ffffff;
+
+  border: 1px solid #b9e6f8;
+  border-radius: 25px;
+  box-shadow: 0 18px 45px
+    rgba(31, 130, 174, 0.1);
+}
+
+.multiplayer-finished-label {
+  color: #1598ce;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.multiplayer-finished h1 {
+  margin: 5px 0 0;
+  color: var(--navy);
+  font-size: clamp(34px, 5vw, 55px);
+}
+
+.multiplayer-finished > p {
+  max-width: 520px;
+  margin: 0;
+
+  color: var(--navy-light);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.prepare-next-game-button {
+  margin-top: 12px;
+  padding: 14px 28px;
+
+  border: none;
+  border-radius: 14px;
+
+  background: linear-gradient(
+    135deg,
+    #38bdf8,
+    #168fc4
+  );
+
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 800;
+
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.prepare-next-game-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+
+  box-shadow: 0 10px 24px
+    rgba(22, 143, 196, 0.28);
+}
+
+.prepare-next-game-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.waiting-next-game-message {
+  margin-top: 12px !important;
+  padding: 13px 18px;
+
+  background: #e8f7fd;
+  border: 1px solid #b8e6f7;
+  border-radius: 12px;
+
+  color: #147aa5 !important;
+  font-weight: 700;
+}
+
+@media (max-width: 700px) {
+  .multiplayer-finished {
+    min-height: 480px;
+    padding: 40px 20px;
+  }
+}
+
+.current-player-card {
+  width: 100%;
+  max-width: 620px;
+  margin: 0 auto 22px;
+  padding: 25px 30px;
+
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 25px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #eaf8fe
+    );
+
+  border: 2px solid #a9def2;
+  border-radius: 24px;
+
+  text-align: left;
+
+  box-shadow:
+    0 15px 32px rgba(30, 139, 185, 0.14);
+
+  animation:
+    multiplayer-player-enter 0.35s ease;
+}
+
+.current-player-card--mine {
+  border-color: #29b6ee;
+
+  box-shadow:
+    0 16px 38px rgba(28, 165, 220, 0.24);
+}
+
+.current-player-avatar {
+  display: grid;
+  place-items: center;
+}
+
+.current-player-details {
+  min-width: 0;
+
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.current-player-label {
+  color: #1598ce !important;
+  font-size: 0.7rem !important;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+}
+
+.current-player-details > strong {
+  width: 100%;
+  max-width: none;
+
+  overflow: hidden;
+
+  color: var(--navy);
+  font-size: clamp(
+    1.35rem,
+    3vw,
+    1.85rem
+  );
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.current-player-lives {
+  min-height: 31px;
+
+  display: flex;
+  align-items: center;
+  flex-direction: row !important;
+  gap: 5px;
+}
+
+.current-player-lives .player-life {
+  font-size: 1.55rem;
+  line-height: 1;
+  transition: 0.2s;
+}
+
+.player-life--active {
+  color: #ff5f6d !important;
+
+  filter:
+    drop-shadow(
+      0 3px 4px rgba(255, 95, 109, 0.2)
+    );
+}
+
+.player-life--empty {
+  color: #d7e4ea !important;
+}
+
+.current-player-card .turn-owner {
+  margin: 4px 0 0;
+
+  color: #587583;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+/* Fragmento requerido más pequeño */
+
+.fragment-card {
+  margin-bottom: 20px;
+  padding: 18px 22px;
+}
+
+.fragment-card strong {
+  font-size: clamp(
+    2rem,
+    5vw,
+    3.4rem
+  );
+
+  letter-spacing: 4px;
+}
+
+@keyframes multiplayer-player-enter {
+  from {
+    opacity: 0;
+    transform:
+      translateY(-10px)
+      scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+@media (max-width: 600px) {
+  .current-player-card {
+    padding: 22px 18px;
+
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 14px;
+
+    text-align: center;
+  }
+
+  .current-player-details {
+    align-items: center;
+  }
+
+  .current-player-details > strong {
+    text-align: center;
+  }
+}

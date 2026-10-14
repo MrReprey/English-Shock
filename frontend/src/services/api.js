@@ -4,6 +4,7 @@ export const BACKEND_URL =
 
 export const API_URL = `${BACKEND_URL}/api`;
 
+
 const TOKEN_KEY = "english_shock_token";
 
 function getAuthHeaders() {
@@ -421,6 +422,39 @@ export async function processMultiplayerTimeout(
       validationMessage ||
         data.message ||
         "No se pudo procesar el tiempo agotado."
+    );
+  }
+
+  return data;
+}
+
+export async function prepareNextMultiplayerGame(
+  code
+) {
+  const response = await fetch(
+    `${API_URL}/multiplayer/rooms/${code}/prepare`,
+    {
+      method: "POST",
+
+      headers: {
+        Accept: "application/json",
+        ...getAuthHeaders(),
+      },
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    const validationMessage =
+      data.errors
+        ? Object.values(data.errors)[0]?.[0]
+        : null;
+
+    throw new Error(
+      validationMessage ||
+        data.message ||
+        "No se pudo preparar la siguiente partida."
     );
   }
 

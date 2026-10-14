@@ -82,6 +82,13 @@ Route::middleware('auth:sanctum')->group(function () {
         [MultiplayerRoomController::class, 'timeout']
     );
 
+    Route::post(
+        '/multiplayer/rooms/{code}/prepare',
+        [
+            MultiplayerRoomController::class,
+            'prepareNextGame',
+        ]
+    );
 });
 
 Route::get(

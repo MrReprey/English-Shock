@@ -9,9 +9,13 @@ import {
   getMultiplayerRoom,
   processMultiplayerTimeout,
   submitMultiplayerWord,
+  prepareNextMultiplayerGame,
 } from "../services/api";
 
-import { useParams } from "react-router-dom";
+import {
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 
 import UserAvatar from "../Components/UserAvatar";
 
@@ -26,6 +30,7 @@ import "./css/MultiplayerGame.css";
 
 function MultiplayerGame() {
   const { code } = useParams();
+  const navigate = useNavigate();
   const { user } = useAuth();
 
   const [isSubmitting, setIsSubmitting] =
@@ -36,6 +41,10 @@ function MultiplayerGame() {
 
   const [liveWord, setLiveWord] =
   useState("");
+
+  const [messages, setMessages] =
+  useState([]);
+
   const channelRef = useRef(null);
   const timeoutProcessedRef = useRef(false);
 
@@ -45,6 +54,10 @@ function MultiplayerGame() {
   const [secondsRemaining, setSecondsRemaining] =
     useState(0);
 
+  const [
+    isPreparingNextGame,
+    setIsPreparingNextGame,
+  ] = useState(false);
 
   const loadRoom = useCallback(async () => {
     try {
@@ -99,6 +112,37 @@ function MultiplayerGame() {
         }
     }
     );
+
+    channel.listenForWhisper(
+      "chat",
+      (chatMessage) => {
+        if (
+          !chatMessage?.id ||
+          !chatMessage?.text
+        ) {
+          return;
+        }
+
+        setMessages((currentMessages) => {
+          const alreadyExists =
+            currentMessages.some(
+              (currentMessage) =>
+                currentMessage.id ===
+                chatMessage.id
+            );
+
+          if (alreadyExists) {
+            return currentMessages;
+          }
+
+          return [
+            ...currentMessages,
+            chatMessage,
+          ].slice(-50);
+        });
+      }
+    );
+
 
     return () => {
       echo.leave(channelName);
@@ -211,6 +255,59 @@ useEffect(() => {
     }
 
 
+  async function handlePrepareNextGame() {
+    try {
+      setIsPreparingNextGame(true);
+      setNotice("");
+
+      const result =
+        await prepareNextMultiplayerGame(code);
+
+      setRoom(result.room);
+
+      navigate(
+        `/multiplayer/sala/${result.room.code}`,
+        {
+          replace: true,
+          state: {
+            room: result.room,
+          },
+        }
+      );
+    } catch (requestError) {
+      setNotice(requestError.message);
+    } finally {
+      setIsPreparingNextGame(false);
+    }
+  }
+
+  function handleSendMessage(text) {
+  if (!channelRef.current) {
+    setNotice(
+      "El chat todavía se está conectando."
+    );
+
+    return;
+  }
+
+  const chatMessage = {
+      id: `${user.id}-${Date.now()}`,
+      userId: user.id,
+      name: user.name,
+      text: text.slice(0, 200),
+    };
+
+    setMessages((currentMessages) => [
+      ...currentMessages,
+      chatMessage,
+    ].slice(-50));
+
+    channelRef.current.whisper(
+      "chat",
+      chatMessage
+    );
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
 
@@ -257,6 +354,20 @@ useEffect(() => {
     }
     }
 
+  useEffect(() => {
+    if (room?.status === "waiting") {
+      navigate(
+        `/multiplayer/sala/${room.code}`,
+        {
+          replace: true,
+          state: {
+            room,
+          },
+        }
+      );
+    }
+  }, [navigate, room]);
+
   if (loading) {
     return (
       <main className="multiplayer-game-message">
@@ -283,10 +394,84 @@ useEffect(() => {
     Number(currentPlayer?.user?.id) ===
     Number(user?.id);
 
+  const isHost =
+  Number(room.host?.id) === Number(user?.id);
+
+  const winnerPlayer = room.players.find(
+    (player) =>
+      Number(player.user?.id) ===
+      Number(room.winner_user_id)
+  );
+
+  if (room.status === "finished") {
+    return (
+      <MultiplayerLayout
+        sidebar={<RoomSidebar
+          room={room}
+          messages={messages}
+          onSendMessage={handleSendMessage}
+        />}
+      >
+        <section className="multiplayer-finished">
+          <span className="multiplayer-finished-label">
+            PARTIDA TERMINADA
+          </span>
+
+          <UserAvatar
+            avatarKey={
+              winnerPlayer?.user?.avatar_key
+            }
+            name={winnerPlayer?.user?.name}
+            size="large"
+          />
+
+          <h1>
+            {winnerPlayer?.user?.name ||
+              "El jugador"}{" "}
+            ganó
+          </h1>
+
+          <p>
+            La partida terminó. Los jugadores
+            nuevos participarán en la siguiente.
+          </p>
+
+          {isHost ? (
+            <button
+              type="button"
+              className="prepare-next-game-button"
+              onClick={handlePrepareNextGame}
+              disabled={isPreparingNextGame}
+            >
+              {isPreparingNextGame
+                ? "Preparando..."
+                : "Preparar nueva partida"}
+            </button>
+          ) : (
+            <p className="waiting-next-game-message">
+              Esperando a que el creador prepare
+              la siguiente partida...
+            </p>
+          )}
+
+          {notice && (
+            <p className="multiplayer-game-notice">
+              {notice}
+            </p>
+          )}
+        </section>
+      </MultiplayerLayout>
+    );
+  }
+
   return (
     <MultiplayerLayout
         sidebar={
-        <RoomSidebar room={room} />
+        <RoomSidebar
+          room={room}
+          messages={messages}
+          onSendMessage={handleSendMessage}
+        />
         }
     >
         <div className="multiplayer-game-main">
@@ -310,39 +495,75 @@ useEffect(() => {
         </header>
 
         <article className="multiplayer-board">
-            <div className="current-player-card">
-            <UserAvatar
-                avatarKey={
-                currentPlayer?.user?.avatar_key
-                }
-                name={
-                currentPlayer?.user?.name
-                }
-                size="medium"
-            />
+            <div
+              key={currentPlayer?.id}
+              className={`current-player-card ${
+                isMyTurn
+                  ? "current-player-card--mine"
+                  : ""
+              }`}
+            >
+              <div className="current-player-avatar">
+                <UserAvatar
+                  avatarKey={
+                    currentPlayer?.user?.avatar_key
+                  }
+                  name={currentPlayer?.user?.name}
+                  size="large"
+                />
+              </div>
 
-            <div>
-                <span>
-                {isMyTurn
+              <div className="current-player-details">
+                <span className="current-player-label">
+                  {isMyTurn
                     ? "ES TU TURNO"
                     : "TURNO ACTUAL"}
                 </span>
 
                 <strong>
-                {currentPlayer?.user?.name ||
+                  {currentPlayer?.user?.name ||
                     "Jugador"}
                 </strong>
-            </div>
-            </div>
 
-            <p className="turn-owner">
-            {isMyTurn
-                ? "¡Es tu turno!"
-                : `Observa la palabra de ${
-                    currentPlayer?.user?.name ||
-                    "Jugador"
-                }`}
-            </p>
+                <div
+                  className="current-player-lives"
+                  aria-label={
+                    `${currentPlayer?.lives_remaining || 0} vidas`
+                  }
+                >
+                  {Array.from(
+                    {
+                      length:
+                        Number(room.initial_lives) || 0,
+                    },
+                    (_, index) => (
+                      <span
+                        key={index}
+                        className={
+                          index <
+                          Number(
+                            currentPlayer?.lives_remaining
+                          )
+                            ? "player-life player-life--active"
+                            : "player-life player-life--empty"
+                        }
+                      >
+                        ♥
+                      </span>
+                    )
+                  )}
+                </div>
+
+                <p className="turn-owner">
+                  {isMyTurn
+                    ? "¡Es tu turno! Escribe una palabra."
+                    : `Observando a ${
+                        currentPlayer?.user?.name ||
+                        "Jugador"
+                      }`}
+                </p>
+              </div>
+            </div>
 
             <div className="fragment-card">
             <span>

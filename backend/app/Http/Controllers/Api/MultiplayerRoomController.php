@@ -180,18 +180,6 @@ class MultiplayerRoomController extends Controller
                         ],
                     ]);
                 }
-
-                if (
-                    $room->status !==
-                    GameRoom::STATUS_WAITING
-                ) {
-                    throw ValidationException::withMessages([
-                        'code' => [
-                            'La partida ya comenzó o terminó.',
-                        ],
-                    ]);
-                }
-
                 $existingPlayer = $room
                     ->players()
                     ->where('user_id', $user->id)
@@ -265,9 +253,10 @@ class MultiplayerRoomController extends Controller
         ]);
 
         return response()->json([
-            'message' =>
-                'Te uniste correctamente a la sala.',
-
+            'message' => $room->status ===
+                GameRoom::STATUS_PLAYING
+                    ? 'Te uniste como espectador. Participarás en la siguiente partida.'
+                    : 'Te uniste correctamente a la sala.',
             'room' => $room,
         ]);
     }
@@ -830,6 +819,112 @@ class MultiplayerRoomController extends Controller
                 : 'El turno ya fue procesado.',
 
             'processed' => $result['processed'],
+            'room' => $room,
+        ]);
+    }
+
+    public function prepareNextGame(
+        Request $request,
+        string $code
+    ): JsonResponse {
+        /** @var User $user */
+        $user = $request->user();
+
+        $room = DB::transaction(
+            function () use ($code, $user) {
+                $room = GameRoom::query()
+                    ->where('code', strtoupper($code))
+                    ->lockForUpdate()
+                    ->first();
+
+                if (!$room) {
+                    throw ValidationException::withMessages([
+                        'code' => ['La sala no existe.'],
+                    ]);
+                }
+
+                if (
+                    (int) $room->host_user_id !==
+                    (int) $user->id
+                ) {
+                    abort(
+                        403,
+                        'Solamente el creador puede preparar otra partida.'
+                    );
+                }
+
+                if (
+                    $room->status !==
+                    GameRoom::STATUS_FINISHED
+                ) {
+                    throw ValidationException::withMessages([
+                        'room' => [
+                            'La partida todavía no ha terminado.',
+                        ],
+                    ]);
+                }
+
+                $players = $room
+                    ->players()
+                    ->where(
+                        'status',
+                        '!=',
+                        RoomPlayer::STATUS_LEFT
+                    )
+                    ->orderBy('turn_order')
+                    ->lockForUpdate()
+                    ->get();
+
+                foreach ($players as $index => $player) {
+                    $player->update([
+                        'lives_remaining' =>
+                            $room->initial_lives,
+
+                        'turn_order' => $index + 1,
+                        'correct_words' => 0,
+
+                        'status' =>
+                            RoomPlayer::STATUS_WAITING,
+                    ]);
+                }
+
+                $room->update([
+                    'status' =>
+                        GameRoom::STATUS_WAITING,
+
+                    'current_room_player_id' => null,
+                    'current_fragment' => null,
+                    'turn_duration_seconds' => null,
+                    'turn_started_at' => null,
+                    'turn_ends_at' => null,
+                    'round_number' => 0,
+                    'used_words' => [],
+                    'last_valid_word' => null,
+                    'winner_user_id' => null,
+                    'started_at' => null,
+                    'finished_at' => null,
+                ]);
+
+                return $room;
+            }
+        );
+
+        $room->load([
+            'host:id,name,avatar_key',
+            'players.user:id,name,avatar_key',
+        ]);
+
+        broadcast(
+            new \App\Events\MultiplayerGameUpdated(
+                $room->code,
+                'next_game_prepared'
+            )
+        );
+
+        return response()->json([
+            'message' =>
+                'La siguiente partida está preparada.',
+
             'room' => $room,
         ]);
     }
