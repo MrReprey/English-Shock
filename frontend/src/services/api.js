@@ -200,3 +200,119 @@ export async function updateProfile({
 
   return data;
 }
+
+
+export async function createMultiplayerRoom(
+  roomSettings
+) {
+  const response = await fetch(
+    `${API_URL}/multiplayer/rooms`,
+    {
+      method: "POST",
+
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        ...getAuthHeaders(),
+      },
+
+      body: JSON.stringify({
+        name: roomSettings.name.trim(),
+
+        max_players:
+          Number(roomSettings.maxPlayers),
+
+        initial_lives:
+          Number(roomSettings.lives),
+
+        is_private:
+          Boolean(roomSettings.isPrivate),
+      }),
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    const firstValidationError =
+      data.errors
+        ? Object.values(data.errors)[0]?.[0]
+        : null;
+
+    throw new Error(
+      firstValidationError ||
+        data.message ||
+        "No se pudo crear la sala."
+    );
+  }
+
+  return data.room;
+}
+
+export async function getMultiplayerRoom(
+  roomCode
+) {
+  const code = roomCode
+    .trim()
+    .toUpperCase();
+
+  const response = await fetch(
+    `${API_URL}/multiplayer/rooms/${encodeURIComponent(code)}`,
+    {
+      cache: "no-store",
+
+      headers: {
+        Accept: "application/json",
+        ...getAuthHeaders(),
+      },
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      data.message ||
+        "No se pudo cargar la sala."
+    );
+  }
+
+  return data.room;
+}
+
+export async function joinMultiplayerRoom(
+  roomCode
+) {
+  const code = roomCode
+    .trim()
+    .toUpperCase();
+
+  const response = await fetch(
+    `${API_URL}/multiplayer/rooms/${encodeURIComponent(code)}/join`,
+    {
+      method: "POST",
+
+      headers: {
+        Accept: "application/json",
+        ...getAuthHeaders(),
+      },
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    const firstValidationError =
+      data.errors
+        ? Object.values(data.errors)[0]?.[0]
+        : null;
+
+    throw new Error(
+      firstValidationError ||
+        data.message ||
+        "No se pudo ingresar a la sala."
+    );
+  }
+
+  return data.room;
+}

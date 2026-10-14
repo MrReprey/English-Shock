@@ -1,8 +1,11 @@
-import { useState } from "react";
+
 import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext";
 import "./css/Navbar.css";
+
+
+import logoDiroc from "../images/title_diroc.png";
 
 function Navbar({
   image,
@@ -10,13 +13,10 @@ function Navbar({
   setImageFile,
 }) {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   const displayedImage =
   image || user?.avatar_url;
-
-  const [loggingOut, setLoggingOut] =
-    useState(false);
 
   function selectImage(event) {
     const file = event.target.files[0];
@@ -30,21 +30,13 @@ function Navbar({
     }
   }
 
-  async function handleLogout() {
-    try {
-      setLoggingOut(true);
-      await logout();
-      navigate("/login", { replace: true });
-    } finally {
-      setLoggingOut(false);
-    }
-  }
-
   return (
     <header className="navbar">
-      <h2 className="logo">
-        English <span>Shock</span>
-      </h2>
+      <img
+        src={logoDiroc}
+        alt="Logo de DIROC"
+        className="logo-image"
+      />
 
       <div className="profile">
         <div className="profile-user">
@@ -75,17 +67,6 @@ function Navbar({
           onClick={() => navigate("/perfil")}
         >
           Mi perfil
-        </button>
-
-        <button
-          type="button"
-          className="logout-button"
-          onClick={handleLogout}
-          disabled={loggingOut}
-        >
-          {loggingOut
-            ? "Saliendo..."
-            : "Cerrar sesión"}
         </button>
       </div>
     </header>

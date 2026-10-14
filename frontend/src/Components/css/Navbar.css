@@ -12,16 +12,6 @@
   box-shadow: 0 4px 20px rgba(25, 50, 77, 0.05);
 }
 
-.logo {
-  color: var(--navy);
-  font-size: 24px;
-  font-weight: 800;
-}
-
-.logo span {
-  color: var(--coral);
-}
-
 .profile {
   display: flex;
   align-items: center;
@@ -111,6 +101,10 @@
     align-items: flex-start;
     flex: 1;
   }
+  .logo-image {
+    width: 130px;
+    height: 48px;
+  }
 }
 .open-profile-button {
   padding: 10px 16px;
@@ -137,4 +131,12 @@
   .open-profile-button {
     flex: 1;
   }
+}
+
+.logo-image {
+  width: 150px;
+  height: 55px;
+  display: block;
+  object-fit: contain;
+  object-position: left center;
 }

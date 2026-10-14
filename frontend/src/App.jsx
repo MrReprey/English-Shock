@@ -12,6 +12,13 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 
+import SinglePlayer from "./pages/SinglePlayer";
+import Multiplayer from "./pages/Multiplayer";
+
+import CreateRoom from "./pages/CreateRoom";
+import JoinRoom from "./pages/JoinRoom";
+import WaitingRoom from "./pages/WaitingRoom";
+
 import ProtectedRoute from "./Components/ProtectedRoute";
 
 function App() {
@@ -33,6 +40,51 @@ function App() {
           element={
             <ProtectedRoute>
               <Home />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/SinglePlayer"
+          element={
+            <ProtectedRoute>
+              <SinglePlayer />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/Multiplayer"
+          element={
+            <ProtectedRoute>
+              <Multiplayer />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/multiplayer/crear"
+          element={
+            <ProtectedRoute>
+              <CreateRoom />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/multiplayer/unirse"
+          element={
+            <ProtectedRoute>
+              <JoinRoom />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/multiplayer/sala/:code"
+          element={
+            <ProtectedRoute>
+              <WaitingRoom />
             </ProtectedRoute>
           }
         />

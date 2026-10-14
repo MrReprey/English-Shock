@@ -30,7 +30,10 @@ const gameTypeNames = {
 
 function Profile() {
   const navigate = useNavigate();
-  const { updateCurrentUser } = useAuth();
+  const {
+    updateCurrentUser,
+    logout,
+  } = useAuth();
 
   const [profile, setProfile] =
     useState(null);
@@ -53,6 +56,9 @@ function Profile() {
     useState(true);
 
   const [saving, setSaving] =
+    useState(false);
+
+  const [loggingOut, setLoggingOut] =
     useState(false);
 
   const [error, setError] =
@@ -181,6 +187,21 @@ function Profile() {
     }
   }
 
+  async function handleLogout() {
+    try {
+      setLoggingOut(true);
+
+      await logout();
+
+      navigate("/login", {
+        replace: true,
+      });
+    } finally {
+      setLoggingOut(false);
+    }
+  }
+
+
   if (loading) {
     return (
       <main className="profile-page">
@@ -217,12 +238,26 @@ function Profile() {
   return (
     <main className="profile-page">
       <section className="profile-card">
-        <button
-          className="profile-back-button"
-          onClick={() => navigate("/")}
-        >
-          ← Volver
-        </button>
+        <div className="profile-top-actions">
+          <button
+            type="button"
+            className="profile-back-button"
+            onClick={() => navigate("/")}
+          >
+            ← Volver al inicio
+          </button>
+
+          <button
+            type="button"
+            className="profile-logout-button"
+            onClick={handleLogout}
+            disabled={loggingOut}
+          >
+            {loggingOut
+              ? "Cerrando sesión..."
+              : "Cerrar sesión"}
+          </button>
+        </div>
 
         <header className="profile-header">
           <div className="profile-avatar">

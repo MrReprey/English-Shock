@@ -2,88 +2,209 @@
   min-height: 100vh;
 }
 
-.home-content {
-  width: min(1150px, 88%);
+.mode-selection {
+  width: min(1100px, 90%);
   margin: 0 auto;
-  padding: 75px 0 90px;
+  padding: 65px 0 90px;
 }
 
-.introduction {
-  max-width: 720px;
-  margin-bottom: 48px;
+.mode-header {
+  max-width: 750px;
+  margin: 0 auto 48px;
+  text-align: center;
 }
 
-.small-title {
-  color: var(--coral);
+.mode-small-title {
+  color: var(--coral-dark);
   font-size: 12px;
   font-weight: 800;
-  letter-spacing: 2px;
+  letter-spacing: 2.5px;
 }
 
-.introduction h1 {
-  max-width: 700px;
-  margin-top: 16px;
-
+.mode-header h1 {
+  margin-top: 14px;
   color: var(--navy);
-  font-size: clamp(45px, 6vw, 72px);
-  line-height: 1.05;
-  letter-spacing: -3px;
+  font-size: clamp(42px, 5vw, 64px);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -2px;
 }
 
-.introduction h1 span {
+.mode-header h1 span {
   color: var(--coral);
 }
 
-.introduction p {
-  margin-top: 20px;
-
+.mode-header p {
+  max-width: 600px;
+  margin: 18px auto 0;
   color: var(--navy-light);
   font-size: 17px;
+  line-height: 1.7;
+}
+
+.mode-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+}
+
+.mode-card {
+  padding: 0;
+  overflow: hidden;
+
+  text-align: left;
+
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 25px;
+
+  box-shadow:
+    0 18px 45px rgba(14, 116, 144, 0.1);
+
+  cursor: pointer;
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.mode-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--coral);
+
+  box-shadow:
+    0 24px 55px rgba(14, 165, 233, 0.2);
+}
+
+.mode-card:focus-visible {
+  outline: 4px solid rgba(56, 189, 248, 0.25);
+  outline-offset: 4px;
+}
+
+.mode-image-container {
+  position: relative;
+  height: 280px;
+  padding: 25px 35px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      135deg,
+      #e0f2fe,
+      #f0f9ff
+    );
+}
+
+.mode-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+
+  object-fit: contain;
+  object-position: center;
+
+  transition: transform 0.35s ease;
+}
+
+.mode-card:hover .mode-image {
+  transform: scale(1.02);
+}
+
+.mode-badge {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+
+  padding: 8px 13px;
+
+  color: #ffffff;
+  background: var(--coral-dark);
+  border-radius: 999px;
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.mode-information {
+  min-height: 160px;
+  padding: 27px 28px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+}
+
+.mode-information h2 {
+  margin-bottom: 10px;
+  color: var(--navy);
+  font-size: 27px;
+  font-weight: 800;
+}
+
+.mode-information p {
+  max-width: 355px;
+  margin: 0;
+  color: var(--navy-light);
+  font-size: 15px;
   line-height: 1.6;
 }
 
-.learning-options {
+.mode-arrow {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  align-items: start;
-  gap: 22px;
+  place-items: center;
+
+  color: #ffffff;
+  background: var(--coral);
+  border-radius: 50%;
+
+  font-size: 24px;
+  font-weight: 700;
+
+  transition: transform 0.25s ease;
+}
+
+.mode-card:hover .mode-arrow {
+  transform: translateX(5px);
 }
 
 @media (max-width: 800px) {
-  .learning-options {
+  .mode-options {
     grid-template-columns: 1fr;
+  }
+
+  .mode-image-container {
+    height: 240px;
+    padding: 22px;
   }
 }
 
 @media (max-width: 600px) {
-  .home-content {
-    width: 90%;
-    padding-top: 50px;
+  .mode-selection {
+    width: 92%;
+    padding: 45px 0 70px;
   }
 
-  .introduction h1 {
-    font-size: 45px;
-    letter-spacing: -2px;
+  .mode-header h1 {
+    font-size: 42px;
   }
-}
-.starting-message {
-  margin-top: 20px;
 
-  color: var(--blue);
-  font-size: 14px;
-  font-weight: 700;
-}
+  .mode-information {
+    min-height: auto;
+    padding: 23px 21px;
+  }
 
-.api-error-message {
-  margin-top: 20px;
-  padding: 13px 16px;
-
-  border: 1px solid #ffc0b8;
-  border-radius: 11px;
-
-  background: #fff0ea;
-  color: var(--coral-dark);
-
-  font-size: 13px;
-  font-weight: 700;
+  .mode-information h2 {
+    font-size: 24px;
+  }
 }

@@ -405,3 +405,37 @@
     width: 100%;
   }
 }
+
+.profile-top-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.profile-logout-button {
+  padding: 10px 17px;
+
+  color: #b42318;
+  font-weight: 700;
+
+  background: #fff5f4;
+  border: 1px solid #f4b5af;
+  border-radius: 11px;
+
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.profile-logout-button:hover:not(:disabled) {
+  color: #ffffff;
+  background: #d92d20;
+  border-color: #d92d20;
+
+  transform: translateY(-1px);
+}
+
+.profile-logout-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}

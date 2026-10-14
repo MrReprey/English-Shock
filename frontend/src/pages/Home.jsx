@@ -1,63 +1,21 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useAuth } from "../context/AuthContext";
 import Navbar from "../Components/Navbar";
-import LearningOption from "../Components/LearningOption";
-import { createPlayer } from "../services/api";
+
+import singlePlayerImage from "../images/SinglePlayer.png";
+import multiplayerImage from "../images/MultiPlayer.png";
 
 import "./css/Home.css";
 
 function Home() {
   const navigate = useNavigate();
-  const { user } = useAuth();
-
-  const [openOption, setOpenOption] =
-    useState(null);
 
   const [playerImage, setPlayerImage] =
     useState(null);
 
-  const [playerImageFile, setPlayerImageFile] =
+  const [, setPlayerImageFile] =
     useState(null);
-
-  const [isStarting, setIsStarting] =
-    useState(false);
-
-  const [apiError, setApiError] =
-    useState("");
-
-  function toggleOption(option) {
-    setOpenOption((currentOption) =>
-      currentOption === option ? null : option
-    );
-  }
-
-  async function startGame(type, category) {
-    try {
-      setIsStarting(true);
-      setApiError("");
-
-      const player = await createPlayer(
-        user.name,
-        playerImageFile
-      );
-
-      navigate(`/juego/${type}/${category}`, {
-        state: {
-          playerId: player.id,
-          playerName: player.name,
-
-          playerImage:
-            player.avatar_url || playerImage,
-        },
-      });
-    } catch (error) {
-      setApiError(error.message);
-    } finally {
-      setIsStarting(false);
-    }
-  }
 
   return (
     <div className="home-page">
@@ -67,118 +25,93 @@ function Home() {
         setImageFile={setPlayerImageFile}
       />
 
-      <main className="home-content">
-        <section className="introduction">
-          <span className="small-title">
-            APRENDE JUGANDO
+      <main className="mode-selection">
+        <header className="mode-header">
+          <span className="mode-small-title">
+            ELIGE TU EXPERIENCIA
           </span>
 
           <h1>
-            ¿Qué quieres aprender{" "}
-            <span>hoy?</span>
+            ¿Cómo quieres
+            <span> jugar?</span>
           </h1>
 
           <p>
-            Elige una categoría para comenzar
-            a practicar inglés.
+            Elige un modo de juego para comenzar
+            tu experiencia en DIROC.
           </p>
-        </section>
+        </header>
 
-        <section className="learning-options">
-          <LearningOption
-            icon="⚡"
-            title="Verbos"
-            description="Aprende verbos regulares e irregulares."
-            isOpen={openOption === "verbos"}
-            onToggle={() =>
-              toggleOption("verbos")
+        <section className="mode-options">
+          <button
+            type="button"
+            className="mode-card"
+            onClick={() =>
+              navigate("/SinglePlayer")
             }
-            onCategorySelect={(category) =>
-              startGame("verbos", category)
-            }
-            categories={[
-              {
-                id: "presente-simple",
-                label: "Presente simple",
-              },
-              {
-                id: "pasado-simple",
-                label: "Pasado simple",
-              },
-            ]}
-          />
+          >
+            <div className="mode-image-container">
+              <img
+                src={singlePlayerImage}
+                alt="Modo Single Player"
+                className="mode-image"
+              />
 
-          <LearningOption
-            icon="📚"
-            title="Vocabulario"
-            description="Descubre nuevas palabras y significados."
-            isOpen={
-              openOption === "vocabulario"
-            }
-            onToggle={() =>
-              toggleOption("vocabulario")
-            }
-            onCategorySelect={(category) =>
-              startGame(
-                "vocabulario",
-                category
-              )
-            }
-            categories={[
-              {
-                id: "animales",
-                label: "Animales",
-              },
-              {
-                id: "frutas-verduras",
-                label: "Frutas y verduras",
-              },
-            ]}
-          />
+              <span className="mode-badge">
+                INDIVIDUAL
+              </span>
+            </div>
 
-          <LearningOption
-            icon="💬"
-            title="Oraciones"
-            description="Ordena palabras y construye oraciones en inglés."
-            isOpen={
-              openOption === "oraciones"
-            }
-            onToggle={() =>
-              toggleOption("oraciones")
-            }
-            onCategorySelect={(category) =>
-              startGame(
-                "oraciones",
-                category
-              )
-            }
-            categories={[
-              {
-                id: "presente-simple",
-                label: "Presente simple",
-              },
-              {
-                id: "pasado-simple",
-                label: "Pasado simple",
-              },
-              {
-                id: "presente-continuo",
-                label: "Presente continuo",
-              },
-            ]}
-          />
+            <div className="mode-information">
+              <div>
+                <h2>Single Player</h2>
 
-          {isStarting && (
-            <p className="starting-message">
-              Preparando la partida...
-            </p>
-          )}
+                <p>
+                  Practica a tu ritmo, supera tus
+                  puntuaciones y mejora tu inglés.
+                </p>
+              </div>
 
-          {apiError && (
-            <p className="api-error-message">
-              {apiError}
-            </p>
-          )}
+              <span className="mode-arrow">
+                →
+              </span>
+            </div>
+          </button>
+
+          <button
+            type="button"
+            className="mode-card"
+            onClick={() =>
+              navigate("/multiplayer")
+            }
+          >
+            <div className="mode-image-container">
+              <img
+                src={multiplayerImage}
+                alt="Modo Multiplayer"
+                className="mode-image"
+              />
+
+              <span className="mode-badge">
+                EN LÍNEA
+              </span>
+            </div>
+
+            <div className="mode-information">
+              <div>
+                <h2>Multiplayer</h2>
+
+                <p>
+                  Crea o únete a una sala y compite
+                  con otros jugadores.
+                </p>
+              </div>
+
+              <span className="mode-arrow">
+                →
+              </span>
+            </div>
+          </button>
         </section>
       </main>
     </div>

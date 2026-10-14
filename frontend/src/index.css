@@ -1,19 +1,20 @@
 @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap");
 
 :root {
-  --background: #f7f3e8;
-  --surface: #fffdf8;
+  --background: #f0f9ff;
+  --surface: #ffffff;
 
-  --navy: #19324d;
-  --navy-light: #52677e;
+  --navy: #183b56;
+  --navy-light: #547086;
 
-  --coral: #ff6b5f;
-  --coral-dark: #e94f45;
+  /* Nueva identidad celeste de DIROC */
+  --coral: #38bdf8;
+  --coral-dark: #0284c7;
 
-  --blue: #4a90e2;
-  --yellow: #f3bd4d;
+  --blue: #2563eb;
+  --yellow: #fbbf24;
 
-  --border: #ded8cc;
+  --border: #bae6fd;
 }
 
 * {

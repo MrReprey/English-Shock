@@ -1,0 +1,187 @@
+.multiplayer-page {
+  min-height: 100vh;
+}
+
+.multiplayer-content {
+  width: min(1050px, 90%);
+  margin: 0 auto;
+  padding: 55px 0 90px;
+}
+
+.multiplayer-back {
+  padding: 0;
+
+  color: var(--coral-dark);
+  background: transparent;
+  border: none;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.multiplayer-back:hover {
+  color: var(--blue);
+  transform: translateX(-4px);
+}
+
+.multiplayer-header {
+  max-width: 720px;
+  margin: 55px auto 45px;
+  text-align: center;
+}
+
+.multiplayer-header > span {
+  color: var(--coral-dark);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+}
+
+.multiplayer-header h1 {
+  margin: 13px 0;
+
+  color: var(--navy);
+  font-size: clamp(42px, 5vw, 62px);
+  font-weight: 800;
+  letter-spacing: -2px;
+}
+
+.multiplayer-header p {
+  margin: 0 auto;
+
+  color: var(--navy-light);
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.multiplayer-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px;
+}
+
+.multiplayer-option {
+  min-height: 265px;
+  padding: 30px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  color: var(--navy);
+  text-align: left;
+
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 24px;
+
+  box-shadow:
+    0 16px 40px rgba(14, 116, 144, 0.09);
+
+  cursor: pointer;
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.multiplayer-option:hover {
+  transform: translateY(-7px);
+  border-color: var(--coral);
+
+  box-shadow:
+    0 22px 48px rgba(14, 165, 233, 0.18);
+}
+
+.multiplayer-option-icon {
+  width: 58px;
+  height: 58px;
+  margin-bottom: 26px;
+
+  display: grid;
+  place-items: center;
+
+  color: white;
+  background:
+    linear-gradient(
+      135deg,
+      var(--coral),
+      var(--coral-dark)
+    );
+
+  border-radius: 17px;
+
+  font-size: 29px;
+  font-weight: 800;
+}
+
+.multiplayer-option-label {
+  color: var(--coral-dark);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.multiplayer-option h2 {
+  margin: 7px 0 10px;
+
+  color: var(--navy);
+  font-size: 27px;
+  font-weight: 800;
+}
+
+.multiplayer-option p {
+  margin: 0;
+
+  color: var(--navy-light);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.multiplayer-arrow {
+  width: 43px;
+  height: 43px;
+  margin-top: auto;
+  align-self: flex-end;
+
+  display: grid;
+  place-items: center;
+
+  color: white;
+  background: var(--coral);
+  border-radius: 50%;
+
+  font-size: 21px;
+  font-weight: 800;
+
+  transition: transform 0.2s;
+}
+
+.multiplayer-option:hover .multiplayer-arrow {
+  transform: translateX(5px);
+}
+
+@media (max-width: 750px) {
+  .multiplayer-options {
+    grid-template-columns: 1fr;
+  }
+
+  .multiplayer-header {
+    margin-top: 42px;
+  }
+}
+
+@media (max-width: 500px) {
+  .multiplayer-content {
+    width: 92%;
+    padding-top: 35px;
+  }
+
+  .multiplayer-option {
+    min-height: 250px;
+    padding: 24px;
+  }
+}
