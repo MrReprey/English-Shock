@@ -6,6 +6,8 @@ import {
 import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext";
+import AvatarSelector from "../Components/AvatarSelector";
+import UserAvatar from "../Components/UserAvatar";
 
 import {
   getProfile,
@@ -41,13 +43,9 @@ function Profile() {
   const [form, setForm] = useState({
     name: "",
     email: "",
+    avatarKey: "avatar_01",
   });
 
-  const [avatarFile, setAvatarFile] =
-    useState(null);
-
-  const [avatarPreview, setAvatarPreview] =
-    useState("");
 
   const [editing, setEditing] =
     useState(false);
@@ -84,11 +82,12 @@ function Profile() {
         setForm({
           name: profileData.user.name,
           email: profileData.user.email,
+          avatarKey:
+            profileData.user.avatar_key ||
+            "avatar_01",
         });
 
-        setAvatarPreview(
-          profileData.player?.avatar_url || ""
-        );
+        
       } catch (requestError) {
         setError(requestError.message);
       } finally {
@@ -108,32 +107,18 @@ function Profile() {
     }));
   }
 
-  function handleAvatarChange(event) {
-    const file = event.target.files[0];
-
-    if (!file) {
-      return;
-    }
-
-    setAvatarFile(file);
-    setAvatarPreview(
-      URL.createObjectURL(file)
-    );
-  }
 
   function cancelEditing() {
     setEditing(false);
-    setAvatarFile(null);
     setSaveError("");
 
     setForm({
       name: profile.user.name,
       email: profile.user.email,
+      avatarKey:
+        profile.user.avatar_key ||
+        "avatar_01",
     });
-
-    setAvatarPreview(
-      profile.player?.avatar_url || ""
-    );
   }
 
   async function handleSubmit(event) {
@@ -145,11 +130,11 @@ function Profile() {
       setSuccessMessage("");
 
       const updatedProfile =
-        await updateProfile({
-          name: form.name,
-          email: form.email,
-          avatarFile,
-        });
+      await updateProfile({
+        name: form.name,
+        email: form.email,
+        avatarKey: form.avatarKey,
+      });
 
       setProfile((currentProfile) => ({
         ...currentProfile,
@@ -160,22 +145,14 @@ function Profile() {
       setForm({
         name: updatedProfile.user.name,
         email: updatedProfile.user.email,
+        avatarKey:
+          updatedProfile.user.avatar_key,
       });
 
-      setAvatarPreview(
-        updatedProfile.player?.avatar_url || ""
-      );
-
-      setAvatarFile(null);
+    
       setEditing(false);
 
-      updateCurrentUser({
-        ...updatedProfile.user,
-
-        avatar_url:
-          updatedProfile.player?.avatar_url ||
-          null,
-      });
+      updateCurrentUser(updatedProfile.user);
 
       setSuccessMessage(
         updatedProfile.message
@@ -260,20 +237,11 @@ function Profile() {
         </div>
 
         <header className="profile-header">
-          <div className="profile-avatar">
-            {avatarPreview ? (
-              <img
-                src={avatarPreview}
-                alt={`Avatar de ${user.name}`}
-              />
-            ) : (
-              <span>
-                {user.name
-                  .charAt(0)
-                  .toUpperCase()}
-              </span>
-            )}
-          </div>
+          <UserAvatar
+            avatarKey={user.avatar_key}
+            name={user.name}
+            size="large"
+          />
 
           <div className="profile-identity">
             <span className="profile-label">
@@ -348,12 +316,17 @@ function Profile() {
                 Imagen de perfil
               </label>
 
-              <input
-                id="profile-avatar"
-                type="file"
-                accept="image/jpeg,image/png,image/webp"
-                onChange={handleAvatarChange}
-              />
+              <div className="profile-edit-field">
+                <AvatarSelector
+                  value={form.avatarKey}
+                  onChange={(avatarKey) =>
+                    setForm((currentForm) => ({
+                      ...currentForm,
+                      avatarKey,
+                    }))
+                  }
+                />
+              </div>
 
               <small>
                 Formatos permitidos: JPG, PNG o

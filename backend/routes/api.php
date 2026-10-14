@@ -63,6 +63,25 @@ Route::middleware('auth:sanctum')->group(function () {
         [MultiplayerRoomController::class, 'join']
     );
 
+    Route::post(
+        '/multiplayer/rooms/{code}/start',
+        [
+            MultiplayerRoomController::class,
+            'start',
+        ]
+    );
+    Route::post(
+        '/multiplayer/rooms/{code}/words',
+        [
+            MultiplayerRoomController::class,
+            'submitWord',
+        ]
+    );
+    Route::post(
+        '/multiplayer/rooms/{code}/timeout',
+        [MultiplayerRoomController::class, 'timeout']
+    );
+
 });
 
 Route::get(

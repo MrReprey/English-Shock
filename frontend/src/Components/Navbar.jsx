@@ -1,34 +1,14 @@
-
 import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext";
-import "./css/Navbar.css";
-
+import UserAvatar from "./UserAvatar";
 
 import logoDiroc from "../images/title_diroc.png";
+import "./css/Navbar.css";
 
-function Navbar({
-  image,
-  setImage,
-  setImageFile,
-}) {
+function Navbar() {
   const navigate = useNavigate();
   const { user } = useAuth();
-
-  const displayedImage =
-  image || user?.avatar_url;
-
-  function selectImage(event) {
-    const file = event.target.files[0];
-
-    if (file) {
-      const temporaryUrl =
-        URL.createObjectURL(file);
-
-      setImage(temporaryUrl);
-      setImageFile(file);
-    }
-  }
 
   return (
     <header className="navbar">
@@ -44,23 +24,12 @@ function Navbar({
           <span>{user?.email}</span>
         </div>
 
-        <label
-          className="profile-image"
-          title="Seleccionar imagen"
-        >
-          {displayedImage ? (
-            <img
-              src={displayedImage}
-              alt="Perfil del jugador"
-            />
-          ) : (
-            <span>
-              {user?.name
-                ?.charAt(0)
-                .toUpperCase() || "+"}
-            </span>
-          )}
-        </label>
+        <UserAvatar
+          avatarKey={user?.avatar_key}
+          name={user?.name}
+          size="small"
+        />
+
         <button
           type="button"
           className="open-profile-button"

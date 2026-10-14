@@ -7,11 +7,13 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use App\Models\User;
 
 class ProfileController extends Controller
 {
     public function show(Request $request): JsonResponse
     {
+        
         $user = $request->user();
         $player = $user->player;
 
@@ -21,6 +23,7 @@ class ProfileController extends Controller
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
+                    'avatar_key' => $user->avatar_key,
                 ],
 
                 'player' => null,
@@ -78,6 +81,7 @@ class ProfileController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
+                'avatar_key' => $user->avatar_key,
             ],
 
             'player' => [
@@ -115,17 +119,17 @@ class ProfileController extends Controller
                     ->ignore($user->id),
             ],
 
-            'avatar' => [
-                'nullable',
-                'image',
-                'mimes:jpg,jpeg,png,webp',
-                'max:2048',
+            'avatar_key' => [
+                'required',
+                'string',
+                Rule::in(User::AVATAR_KEYS),
             ],
         ]);
 
         $user->update([
             'name' => $validated['name'],
             'email' => $validated['email'],
+            'avatar_key' => $validated['avatar_key'],
         ]);
 
         $player = $user->player;
@@ -137,24 +141,9 @@ class ProfileController extends Controller
             ]);
         }
 
-        $avatarPath = $player->avatar;
-
-        if ($request->hasFile('avatar')) {
-            $newAvatarPath = $request
-                ->file('avatar')
-                ->store('avatars', 'public');
-
-            if ($avatarPath) {
-                Storage::disk('public')
-                    ->delete($avatarPath);
-            }
-
-            $avatarPath = $newAvatarPath;
-        }
-
+        
         $player->update([
             'name' => $user->name,
-            'avatar' => $avatarPath,
         ]);
 
         return response()->json([
@@ -164,6 +153,7 @@ class ProfileController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
+                'avatar_key' => $user->avatar_key,
             ],
 
             'player' => [

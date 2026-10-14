@@ -126,6 +126,7 @@ export async function getLeaderboard(
 
   return data.leaderboard ?? data;
 }
+
 export async function getProfile() {
   const response = await fetch(
     `${API_URL}/profile`,
@@ -156,19 +157,17 @@ export async function getProfile() {
   return data;
 }
 
+
 export async function updateProfile({
   name,
   email,
-  avatarFile,
+  avatarKey,
 }) {
   const formData = new FormData();
 
   formData.append("name", name.trim());
   formData.append("email", email.trim());
-
-  if (avatarFile) {
-    formData.append("avatar", avatarFile);
-  }
+  formData.append("avatar_key", avatarKey);
 
   const response = await fetch(
     `${API_URL}/profile`,
@@ -187,15 +186,15 @@ export async function updateProfile({
   const data = await response.json();
 
   if (!response.ok) {
+    const validationError =
+      data.errors &&
+      Object.values(data.errors)[0]?.[0];
+
     throw new Error(
-      data.message ||
+      validationError ||
+        data.message ||
         "No se pudo actualizar el perfil"
     );
-  }
-
-  if (data.player?.avatar_url) {
-    data.player.avatar_url =
-      `${BACKEND_URL}${data.player.avatar_url}`;
   }
 
   return data;
@@ -315,4 +314,115 @@ export async function joinMultiplayerRoom(
   }
 
   return data.room;
+}
+
+export async function startMultiplayerGame(
+  roomCode
+) {
+  const normalizedCode =
+    roomCode.trim().toUpperCase();
+
+  const response = await fetch(
+    `${API_URL}/multiplayer/rooms/${encodeURIComponent(
+      normalizedCode
+    )}/start`,
+    {
+      method: "POST",
+
+      headers: {
+        Accept: "application/json",
+        ...getAuthHeaders(),
+      },
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    const validationMessage =
+      data.errors
+        ? Object.values(data.errors)[0]?.[0]
+        : null;
+
+    throw new Error(
+      validationMessage ||
+        data.message ||
+        "No se pudo iniciar la partida."
+    );
+  }
+
+  return data.room;
+}
+
+export async function submitMultiplayerWord(
+  roomCode,
+  word
+) {
+  const response = await fetch(
+    `${API_URL}/multiplayer/rooms/${
+      encodeURIComponent(roomCode)
+    }/words`,
+    {
+      method: "POST",
+
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        ...getAuthHeaders(),
+      },
+
+      body: JSON.stringify({
+        word,
+      }),
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    const validationError =
+      data.errors &&
+      Object.values(data.errors)[0]?.[0];
+
+    throw new Error(
+      validationError ||
+        data.message ||
+        "No se pudo validar la palabra."
+    );
+  }
+
+  return data;
+}
+
+export async function processMultiplayerTimeout(
+  code
+) {
+  const response = await fetch(
+    `${API_URL}/multiplayer/rooms/${code}/timeout`,
+    {
+      method: "POST",
+
+      headers: {
+        Accept: "application/json",
+        ...getAuthHeaders(),
+      },
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    const validationMessage =
+      data.errors
+        ? Object.values(data.errors)[0]?.[0]
+        : null;
+
+    throw new Error(
+      validationMessage ||
+        data.message ||
+        "No se pudo procesar el tiempo agotado."
+    );
+  }
+
+  return data;
 }

@@ -13,6 +13,34 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class User extends Authenticatable
 {
+    public const AVATAR_KEYS = [
+        'avatar_01',
+        'avatar_02',
+        'avatar_03',
+        'avatar_04',
+        'avatar_05',
+        'avatar_06',
+        'avatar_07',
+        'avatar_08',
+        'avatar_09',
+        'avatar_10',
+        'avatar_11',
+        'avatar_12',
+        'avatar_13',
+        'avatar_14',
+        'avatar_15',
+        'avatar_16',
+        'avatar_17',
+        'avatar_18',
+        'avatar_19',
+        'avatar_20',
+        'avatar_21',
+        'avatar_22',
+        'avatar_23',
+        'avatar_24',
+        'avatar_25',
+        'avatar_26',
+    ];
     /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -25,6 +53,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'avatar_key',
     ];
 
     /**

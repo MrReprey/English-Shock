@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 
 import Navbar from "../Components/Navbar";
 
-import singlePlayerImage from "../images/SinglePlayer.png";
-import multiplayerImage from "../images/MultiPlayer.png";
+import singlePlayerImage from "../images/Usuario.png";
+import multiplayerImage from "../images/Multijugador.png";
 
 import "./css/Home.css";
 

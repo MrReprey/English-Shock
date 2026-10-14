@@ -1,0 +1,70 @@
+.avatar-selector {
+  margin: 0;
+  padding: 0;
+
+  border: none;
+}
+
+.avatar-selector legend {
+  margin-bottom: 12px;
+
+  color: var(--navy);
+  font-weight: 800;
+}
+
+.avatar-selector-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(auto-fill, minmax(82px, 1fr));
+  gap: 12px;
+
+  max-height: 310px;
+  padding: 4px;
+  overflow-y: auto;
+}
+
+.avatar-option {
+  min-width: 0;
+  padding: 10px 6px;
+
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 7px;
+
+  color: var(--navy-light);
+  background: #f5fcff;
+
+  border: 2px solid transparent;
+  border-radius: 16px;
+
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.avatar-option:hover {
+  background: #e8f8ff;
+  border-color: #a9def4;
+
+  transform: translateY(-2px);
+}
+
+.avatar-option--selected {
+  background: #ddf5ff;
+  border-color: #42b8e8;
+
+  box-shadow:
+    0 0 0 3px rgba(66, 184, 232, 0.15);
+}
+
+.avatar-option span {
+  overflow: hidden;
+
+  width: 100%;
+
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

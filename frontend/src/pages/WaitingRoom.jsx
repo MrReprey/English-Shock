@@ -9,10 +9,13 @@ import {
   useParams,
 } from "react-router-dom";
 
-import Navbar from "../Components/Navbar";
+import MultiplayerLayout from "../Components/MultiplayerLayout";
+import RoomSidebar from "../Components/RoomSidebar";
+
 import { useAuth } from "../context/AuthContext";
 import {
   getMultiplayerRoom,
+  startMultiplayerGame,
 } from "../services/api";
 import { getEcho } from "../services/echo";
 
@@ -25,12 +28,6 @@ function WaitingRoom() {
 
   const { user } = useAuth();
 
-  const [playerImage, setPlayerImage] =
-    useState(null);
-
-  const [, setPlayerImageFile] =
-    useState(null);
-
   const [room, setRoom] = useState(
     location.state?.room || null
   );
@@ -42,6 +39,8 @@ function WaitingRoom() {
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
   const [notice, setNotice] = useState("");
+  const [isStarting, setIsStarting] =
+    useState(false);
 
   const [
     connectedUserIds,
@@ -120,6 +119,17 @@ function WaitingRoom() {
 
     const channel = echo.join(channelName);
 
+    channel.listen(
+      ".multiplayer.game.updated",
+      (event) => {
+        if (event.action === "game_started") {
+          navigate(
+            `/multiplayer/juego/${code}`,
+            { replace: true }
+          );
+        }
+      }
+    );
     channel
       .here((users) => {
         if (!active) {
@@ -183,7 +193,7 @@ function WaitingRoom() {
       active = false;
       echo.leave(channelName);
     };
-  }, [code]);
+  }, [code, navigate]);
 
   async function copyRoomCode() {
     try {
@@ -203,10 +213,22 @@ function WaitingRoom() {
     }
   }
 
-  function handleStartGame() {
-    setNotice(
-      "En el siguiente paso conectaremos el inicio de la partida."
-    );
+  async function handleStartGame() {
+    try {
+      setIsStarting(true);
+      setNotice("");
+
+      await startMultiplayerGame(code);
+
+      navigate(
+        `/multiplayer/juego/${code}`,
+        { replace: true }
+      );
+    } catch (requestError) {
+      setNotice(requestError.message);
+    } finally {
+      setIsStarting(false);
+    }
   }
 
   if (loading && !room) {
@@ -237,20 +259,21 @@ function WaitingRoom() {
   const isHost =
     room.host?.id === user?.id;
 
-  const connectedPlayers =
-    realtimeReady
-      ? connectedUserIds.length
-      : room.players.length;
+  
 
   return (
-    <div className="waiting-page">
-      <Navbar
-        image={playerImage}
-        setImage={setPlayerImage}
-        setImageFile={setPlayerImageFile}
-      />
-
-      <main className="waiting-content">
+    <MultiplayerLayout
+      sidebar={
+        <RoomSidebar
+          room={room}
+          connectedUserIds={
+            connectedUserIds
+          }
+          realtimeReady={realtimeReady}
+        />
+      }
+    >
+      <div className="waiting-main">
         <button
           type="button"
           className="waiting-back-button"
@@ -263,81 +286,18 @@ function WaitingRoom() {
 
         <header className="waiting-header">
           <span>SALA DE ESPERA</span>
+
           <h1>{room.name}</h1>
 
           <p>
-            Comparte el código y espera a que
-            ingresen los demás jugadores.
+            Comparte el código con tus amigos.
+            Cuando todos estén conectados, el
+            creador podrá iniciar la partida.
           </p>
         </header>
 
-        <section className="waiting-grid">
-          <article className="waiting-players-card">
-            <div className="waiting-card-title">
-              <div>
-                <span>PARTICIPANTES</span>
-                <h2>Jugadores conectados</h2>
-              </div>
-
-              <strong>
-                {connectedPlayers}/
-                {room.max_players}
-              </strong>
-            </div>
-
-            <div className="waiting-player-list">
-              {room.players.map((player) => {
-                const isConnected =
-                  connectedUserIds.includes(
-                    Number(player.user?.id)
-                  );
-
-                return (
-                  <div
-                    className="waiting-player"
-                    key={player.id}
-                  >
-                    <div className="waiting-avatar">
-                      {player.user?.name
-                        ?.charAt(0)
-                        .toUpperCase() || "J"}
-                    </div>
-
-                    <div className="waiting-player-name">
-                      <strong>
-                        {player.user?.name ||
-                          "Jugador"}
-                      </strong>
-
-                      <span>
-                        {player.user?.id ===
-                        room.host?.id
-                          ? "Creador de la sala"
-                          : "Participante"}
-
-                        {realtimeReady && (
-                          <>
-                            {" · "}
-                            {isConnected
-                              ? "En línea"
-                              : "Desconectado"}
-                          </>
-                        )}
-                      </span>
-                    </div>
-
-                    <div className="waiting-lives">
-                      {"♥".repeat(
-                        player.lives_remaining
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </article>
-
-          <aside className="waiting-room-card">
+        <section className="waiting-lobby-card">
+          <div className="waiting-code-section">
             <span className="waiting-room-label">
               CÓDIGO DE LA SALA
             </span>
@@ -355,49 +315,56 @@ function WaitingRoom() {
                 ? "Código copiado"
                 : "Copiar código"}
             </button>
+          </div>
 
-            <div className="waiting-rules">
-              <div>
-                <span>Jugadores</span>
-                <strong>
-                  Máximo {room.max_players}
-                </strong>
-              </div>
+          <div className="waiting-rules">
+            <div>
+              <span>Jugadores</span>
 
-              <div>
-                <span>Vidas</span>
-                <strong>
-                  {room.initial_lives}
-                </strong>
-              </div>
-
-              <div>
-                <span>Tiempo</span>
-                <strong>5–10 s</strong>
-              </div>
-
-              <div>
-                <span>Privacidad</span>
-                <strong>
-                  {room.is_private
-                    ? "Privada"
-                    : "Pública"}
-                </strong>
-              </div>
+              <strong>
+                Máximo {room.max_players}
+              </strong>
             </div>
 
+            <div>
+              <span>Vidas</span>
+              <strong>
+                {room.initial_lives}
+              </strong>
+            </div>
+
+            <div>
+              <span>Tiempo por turno</span>
+              <strong>5–10 segundos</strong>
+            </div>
+
+            <div>
+              <span>Privacidad</span>
+
+              <strong>
+                {room.is_private
+                  ? "Privada"
+                  : "Pública"}
+              </strong>
+            </div>
+          </div>
+
+          <div className="waiting-action-area">
             {isHost ? (
               <button
                 type="button"
                 className="waiting-start-button"
                 onClick={handleStartGame}
                 disabled={
-                  room.players.length < 2
+                  room.players.length < 2 ||
+                  isStarting
                 }
               >
-                {room.players.length < 2
-                  ? "Esperando jugadores..."
-                  : "Iniciar partida"}
+                {isStarting
+                  ? "Iniciando..."
+                  : room.players.length < 2
+                    ? "Esperando jugadores..."
+                    : "Iniciar partida"}
               </button>
             ) : (
               <p className="waiting-host-message">
@@ -405,7 +372,7 @@ function WaitingRoom() {
                 inicie la partida...
               </p>
             )}
-          </aside>
+          </div>
         </section>
 
         {notice && (
@@ -413,8 +380,8 @@ function WaitingRoom() {
             {notice}
           </p>
         )}
-      </main>
-    </div>
+      </div>
+    </MultiplayerLayout>
   );
 }
 

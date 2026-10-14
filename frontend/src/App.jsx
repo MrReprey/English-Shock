@@ -18,6 +18,7 @@ import Multiplayer from "./pages/Multiplayer";
 import CreateRoom from "./pages/CreateRoom";
 import JoinRoom from "./pages/JoinRoom";
 import WaitingRoom from "./pages/WaitingRoom";
+import MultiplayerGame from "./pages/MultiplayerGame";
 
 import ProtectedRoute from "./Components/ProtectedRoute";
 
@@ -85,6 +86,15 @@ function App() {
           element={
             <ProtectedRoute>
               <WaitingRoom />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/multiplayer/juego/:code"
+          element={
+            <ProtectedRoute>
+              <MultiplayerGame />
             </ProtectedRoute>
           }
         />
