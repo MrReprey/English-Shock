@@ -16,14 +16,14 @@ export function getEcho() {
   }
 
   if (!echoInstance) {
-    const scheme =
-      import.meta.env.VITE_REVERB_SCHEME ||
-      "http";
+    const isSecure =
+      window.location.protocol === "https:";
 
-    const port = Number(
-      import.meta.env.VITE_REVERB_PORT ||
-      8080
-    );
+    const port = window.location.port
+      ? Number(window.location.port)
+      : isSecure
+        ? 443
+        : 80;
 
     echoInstance = new Echo({
       broadcaster: "reverb",
@@ -32,14 +32,16 @@ export function getEcho() {
         import.meta.env.VITE_REVERB_APP_KEY ||
         "diroc-local-key",
 
-      wsHost:
-        import.meta.env.VITE_REVERB_HOST ||
-        window.location.hostname,
+      /*
+       * Reverb utilizará el mismo dominio
+       * desde el cual se abrió DIROC.
+       */
+      wsHost: window.location.hostname,
 
       wsPort: port,
       wssPort: port,
 
-      forceTLS: scheme === "https",
+      forceTLS: isSecure,
 
       enabledTransports: [
         "ws",

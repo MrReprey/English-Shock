@@ -8,6 +8,8 @@ import {
 import { useAuth } from "../context/AuthContext";
 import "./css/Auth.css";
 
+import logoDiroc from "../images/title_diroc.png";
+
 function Register() {
   const navigate = useNavigate();
 
@@ -75,9 +77,11 @@ function Register() {
   return (
     <main className="auth-page">
       <section className="auth-card">
-        <h1 className="auth-brand">
-          English Shock
-        </h1>
+        <img
+          src={logoDiroc}
+          alt="Logo de DIROC"
+          className="logo-image"
+        />
 
         <p className="auth-subtitle">
           Crea una cuenta para jugar

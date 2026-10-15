@@ -93,11 +93,7 @@ services:
     container_name: english-shock-frontend
     restart: unless-stopped
     environment:
-      VITE_API_URL: http://localhost:8000
       VITE_REVERB_APP_KEY: ${REVERB_APP_KEY:-diroc-local-key}
-      VITE_REVERB_HOST: localhost
-      VITE_REVERB_PORT: 8080
-      VITE_REVERB_SCHEME: http
       CHOKIDAR_USEPOLLING: "true"
     ports:
       - "5173:5173"

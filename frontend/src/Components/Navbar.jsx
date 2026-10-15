@@ -15,7 +15,7 @@ function Navbar() {
       <img
         src={logoDiroc}
         alt="Logo de DIROC"
-        className="logo-image"
+        className="logo-image-nav"
       />
 
       <div className="profile">
